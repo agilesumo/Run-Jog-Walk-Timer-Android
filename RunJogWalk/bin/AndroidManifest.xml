@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.agilesumo.runjogwalk"
+    android:installLocation="auto"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="19" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.agilesumo.runjogwalk.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.agilesumo.runjogwalk.AddRunActivity"
+            android:label="@string/title_activity_add_run"
+            android:parentActivityName="com.agilesumo.runjogwalk.MainActivity" 
+            android:theme="@style/SampleTheme.Light" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.agilesumo.runjogwalk.MainActivity" />
+
+        </activity>
+        
+        <activity
+            android:name="com.agilesumo.runjogwalk.AddJogActivity"
+            android:label="@string/title_activity_add_jog"
+            android:parentActivityName="com.agilesumo.runjogwalk.MainActivity" 
+            android:theme="@style/SampleTheme.Light" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.agilesumo.runjogwalk.MainActivity" />
+
+        </activity>
+        
+         <activity
+            android:name="com.agilesumo.runjogwalk.AddWalkActivity"
+            android:label="@string/title_activity_add_walk"
+            android:parentActivityName="com.agilesumo.runjogwalk.MainActivity" 
+            android:theme="@style/SampleTheme.Light" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.agilesumo.runjogwalk.MainActivity" />
+
+        </activity>
+        
+    </application>
+
+</manifest>

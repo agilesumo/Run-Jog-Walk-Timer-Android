@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Run / Jog / Walk Timer</string>
+    <string name="add_run_btn">Add Run</string>
+    <string name="add_jog_btn">Add Jog</string>
+    <string name="add_walk_btn">Add Walk</string>
+    <string name="add_new_text">Use the buttons above to add items and begin designing your workout</string>
+    <string name="title_activity_add_run">Add Run</string>
+    <string name="title_activity_add_jog">Add Jog</string>
+    <string name="title_activity_add_walk">Add Walk</string>
+        
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="start_btn_text">Start</string>
+    <string name="clear_btn_text">Clear</string>
+    <string name="cancel_btn">Cancel</string>
+    <string name ="mins_text">Mins</string>
+    <string name ="secs_text">Secs</string>
+
+</resources>
