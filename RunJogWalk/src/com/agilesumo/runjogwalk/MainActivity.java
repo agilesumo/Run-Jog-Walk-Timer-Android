@@ -183,6 +183,23 @@ public class MainActivity extends ListActivity {
 					        Toast.LENGTH_LONG).show();
 					}
 			    	
+			    case R.id.startBtn:
+			    	try {
+						Intent intent = new Intent(this, WorkoutTimerActivity.class);
+			            startActivity(intent);
+			            break;
+						
+					}
+					catch (Exception e) {
+					    // handle any errors
+					    Log.e("ErrorMainActivity", "Error in activity", e);  // log the error
+					    // Also let the user know something went wrong
+					    Toast.makeText(
+					        getApplicationContext(),
+					        e.getClass().getName() + " " + e.getMessage(),
+					        Toast.LENGTH_LONG).show();
+					}
+			    	
 			    
 			      
 			    /*	delete the first item in the list and the database	
@@ -266,7 +283,7 @@ public class MainActivity extends ListActivity {
 		startBtn.setVisibility(View.VISIBLE);
 	    clearBtn.setVisibility(View.VISIBLE);
 	    TimeDuration totalDuration = datasource.getTotalDuration();
-	    totalDurationText.setText("Total Duration: " + totalDuration.toString());
+	    totalDurationText.setText("Total Duration: " + totalDuration.toStringLong());
 	    totalDurationText.setVisibility(View.VISIBLE);
 		
 	}

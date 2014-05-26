@@ -44,12 +44,12 @@ public class AddJogActivity extends Activity {
 
 		setContentView(R.layout.activity_add_jog);
 	
-		minutes = (WheelView) findViewById(R.id.hour);
+		minutes = (WheelView) findViewById(R.id.mins);
 		minutes.setViewAdapter(new NumericWheelAdapter(this, 0, 90));
 		minutes.setCyclic(true);
 
 	
-		seconds = (WheelView) findViewById(R.id.mins);
+		seconds = (WheelView) findViewById(R.id.secs);
 		seconds.setViewAdapter(new NumericWheelAdapter(this, 0, 59, "%02d"));
 		seconds.setCyclic(true);
 		
@@ -133,16 +133,21 @@ public class AddJogActivity extends Activity {
 				try {
 			    	Log.d("AndyDebuggingAddJog", "got here start )))"); 
 		
+			    	long hours = 0;
 					long mins = minutes.getCurrentItem();
 					long secs = seconds.getCurrentItem();
 				    if (mins == 0 && secs == 0) {
 				        Toast.makeText(this, "Cannot add a jog of 0 mins and 0 secs", Toast.LENGTH_SHORT).show();
 				        return;
 				    }
+				    if(mins>59) {
+				    	hours++;
+				    	mins -= 60;
+				    }
 				    datasource = new ExcercisesDataSource(this);
 				    datasource.open();
 				    // save the new comment to the database
-				    datasource.createExcercise("Jog", mins, secs);
+				    datasource.createExcercise("Jog", hours, mins, secs);
 				    datasource.close();
 					finish();
 		

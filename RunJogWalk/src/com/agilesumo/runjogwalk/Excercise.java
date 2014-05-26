@@ -3,6 +3,7 @@ package com.agilesumo.runjogwalk;
 public class Excercise {
   private long id;
   private String excercise;
+  private long hours;
   private long minutes;
   private long seconds;
   
@@ -14,6 +15,13 @@ public class Excercise {
       this.id = id;
   }
 
+  public long getHours() {
+	  return hours;
+  }
+  
+  public void setHours(long hours) {
+	  this.hours = hours;
+  }
   public String getExcercise() {
       return excercise;
   }
@@ -37,16 +45,32 @@ public class Excercise {
   public void setSeconds(long seconds) {
 	  this.seconds = seconds;
   }
+  
+  public TimeDuration getTimeDuration(){
+	  TimeDuration duration = new TimeDuration();
+	  duration.addHours(hours);
+	  duration.addMinutes(minutes);
+	  duration.addSeconds(seconds);
+	  return duration;
 	  
+  }
   // Will be used by the ArrayAdapter in the ListView
   @Override
   public String toString() {
+	  String durationStr = excercise + ": ";
+	  if (minutes == 0 && seconds == 0){
+		  return  durationStr + hours + " hr";
+	  }
+	  if (hours > 0){
+		  durationStr += hours + " hr, ";
+	  }
+	  
 	  if (minutes == 0){
-		  return excercise +": " + seconds + " secs";
+		  return durationStr + seconds + " secs";
 	  }
 	  if (seconds == 0){
-		  return excercise + ": " + minutes + " mins";
+		  return durationStr + minutes + " mins";
 	  }
-      return excercise+": "+minutes+" mins, "+seconds+" secs";
+      return durationStr + minutes+" mins, "+seconds+" secs";
   }
 } 

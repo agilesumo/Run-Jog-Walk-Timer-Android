@@ -17,5 +17,14 @@
     <string name="cancel_btn">Cancel</string>
     <string name ="mins_text">Mins</string>
     <string name ="secs_text">Secs</string>
+    <string name="title_activity_workout_timer">Run/Jog/Walk Session</string>
+    <string name="remaining">REMAINING</string>
+    <string name="total_duration">TOTAL</string>
+    <string name="pause_btn_text">PAUSE</string>
+    <string name="quit_btn_text">QUIT</string>
+    <string name="resume_btn_text">RESUME</string>
+    <string name="notification_title">Run/Jog/Walk Session</string>
+    <string name="notification_text">Running</string>
+    
 
 </resources>

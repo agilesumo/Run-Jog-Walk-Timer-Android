@@ -8,14 +8,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.SyncStateContract.Columns;
 
 public class ExcercisesDataSource {
 
   // Database fields
   private SQLiteDatabase database;
   private MySQLiteHelper dbHelper;
-  private String[] allColumns = { MySQLiteHelper.COLUMN_ID,
-      MySQLiteHelper.COLUMN_EXCERCISE, MySQLiteHelper.COLUMN_MINUTES, MySQLiteHelper.COLUMN_SECONDS };
+  private String[] allColumns = { MySQLiteHelper.COLUMN_ID, MySQLiteHelper.COLUMN_EXCERCISE, MySQLiteHelper.COLUMN_HOURS, 
+		  MySQLiteHelper.COLUMN_MINUTES, MySQLiteHelper.COLUMN_SECONDS, MySQLiteHelper.COLUMN_WORKOUT };
 
   public ExcercisesDataSource(Context context) {
     dbHelper = new MySQLiteHelper(context);
@@ -29,11 +30,14 @@ public class ExcercisesDataSource {
     dbHelper.close();
   }
 
-  public Excercise createExcercise(String excercise, long minutes, long seconds) {
+  public Excercise createExcercise(String excercise, long hours, long minutes, long seconds) {
     ContentValues values = new ContentValues();
     values.put(MySQLiteHelper.COLUMN_EXCERCISE, excercise);
+    values.put(MySQLiteHelper.COLUMN_HOURS, hours);
     values.put(MySQLiteHelper.COLUMN_MINUTES, minutes);
     values.put(MySQLiteHelper.COLUMN_SECONDS, seconds);
+    values.put(MySQLiteHelper.COLUMN_WORKOUT, "main");
+
 
     long insertId = database.insert(MySQLiteHelper.TABLE_EXCERCISES, null,
         values);
@@ -80,6 +84,7 @@ public class ExcercisesDataSource {
 	  for (Excercise excercise : allExcercises){
 		  totalDuration.addSeconds(excercise.getSeconds());
 		  totalDuration.addMinutes(excercise.getMinutes());
+		  totalDuration.addHours(excercise.getHours());
 	  }
 	  return totalDuration;
   }
@@ -88,8 +93,9 @@ public class ExcercisesDataSource {
     Excercise excercise = new Excercise();
     excercise.setId(cursor.getLong(0));
     excercise.setExcercise(cursor.getString(1));
-    excercise.setMinutes(cursor.getLong(2));
-    excercise.setSeconds(cursor.getLong(3));
+    excercise.setHours(cursor.getLong(2));
+    excercise.setMinutes(cursor.getLong(3));
+    excercise.setSeconds(cursor.getLong(4));
     return excercise;
   }
 } 

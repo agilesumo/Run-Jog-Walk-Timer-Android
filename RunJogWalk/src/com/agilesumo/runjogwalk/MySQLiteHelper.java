@@ -10,8 +10,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
   public static final String TABLE_EXCERCISES = "excercises";
   public static final String COLUMN_ID = "_id";
   public static final String COLUMN_EXCERCISE = "excercise";
+  public static final String COLUMN_HOURS = "hours";
   public static final String COLUMN_MINUTES = "minutes";
   public static final String COLUMN_SECONDS = "seconds";
+  public static final String COLUMN_WORKOUT = "workout";
 
 		  
 
@@ -21,8 +23,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
   // Database creation sql statement
   private static final String DATABASE_CREATE = "create table "
       + TABLE_EXCERCISES + "(" + COLUMN_ID
-      + " integer primary key autoincrement, " + COLUMN_EXCERCISE
-      + " text not null, " + COLUMN_MINUTES + " integer default 0 ," + COLUMN_SECONDS + " integer default 0);";
+      + " integer primary key autoincrement,"  + COLUMN_EXCERCISE + " text not null, "
+      + COLUMN_HOURS + " integer default 0 ," + COLUMN_MINUTES + " integer default 0 ," 
+      + COLUMN_SECONDS + " integer default 0 , "+ COLUMN_WORKOUT + " text not null);";
 
   public MySQLiteHelper(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);

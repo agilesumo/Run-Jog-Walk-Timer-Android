@@ -8,6 +8,13 @@
     <uses-sdk
         android:minSdkVersion="9"
         android:targetSdkVersion="19" />
+    
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    
+    
 
     <application
         android:allowBackup="true"
@@ -26,8 +33,7 @@
         <activity
             android:name="com.agilesumo.runjogwalk.AddRunActivity"
             android:label="@string/title_activity_add_run"
-            android:parentActivityName="com.agilesumo.runjogwalk.MainActivity" 
-            android:theme="@style/SampleTheme.Light" >
+            android:parentActivityName="com.agilesumo.runjogwalk.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.agilesumo.runjogwalk.MainActivity" />
@@ -37,8 +43,7 @@
         <activity
             android:name="com.agilesumo.runjogwalk.AddJogActivity"
             android:label="@string/title_activity_add_jog"
-            android:parentActivityName="com.agilesumo.runjogwalk.MainActivity" 
-            android:theme="@style/SampleTheme.Light" >
+            android:parentActivityName="com.agilesumo.runjogwalk.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.agilesumo.runjogwalk.MainActivity" />
@@ -49,7 +54,19 @@
             android:name="com.agilesumo.runjogwalk.AddWalkActivity"
             android:label="@string/title_activity_add_walk"
             android:parentActivityName="com.agilesumo.runjogwalk.MainActivity" 
-            android:theme="@style/SampleTheme.Light" >
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.agilesumo.runjogwalk.MainActivity" />
+
+        </activity>
+        
+          <activity
+            android:name="com.agilesumo.runjogwalk.WorkoutTimerActivity"
+            android:label="@string/title_activity_workout_timer"
+            android:parentActivityName="com.agilesumo.runjogwalk.MainActivity" 
+            android:launchMode="singleTop"
+            >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.agilesumo.runjogwalk.MainActivity" />

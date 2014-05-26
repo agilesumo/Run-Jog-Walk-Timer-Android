@@ -1,0 +1,109 @@
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+    android:padding="8dp"
+	android:id="@+id/workout_main_layout"
+	>
+	    	
+    
+    <Button
+        android:id="@+id/resumeBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:onClick="resumeClicked"
+        android:text="@string/resume_btn_text"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:visibility="gone" />
+    
+    <Button
+        android:id="@+id/pauseBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:onClick="pauseClicked"
+        android:text="@string/pause_btn_text"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp" />
+    
+    <Button
+        android:id="@+id/quitBtn"
+        android:text="@string/quit_btn_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="quitClicked"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        />	  
+       
+    <TextView
+        android:id="@+id/duration_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:paddingBottom="5dp"
+        android:layout_above="@id/quitBtn"
+        android:layout_alignParentRight="true"        
+        android:text="@string/total_duration"/>	
+       
+
+    <TextView
+        android:id="@+id/remaining_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:layout_above="@id/pauseBtn"
+        android:text="@string/remaining"
+        android:paddingBottom="5dp"
+        />	  
+      
+    <TextView
+        android:id="@+id/overall_remaining"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:layout_above="@id/remaining_label"
+        
+        />
+    
+    <TextView
+        android:id="@+id/overall_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:layout_above="@id/duration_label"
+        android:layout_alignParentRight="true" 
+        />
+        
+    
+        
+    <TextView
+        android:id="@+id/countdown_excercise"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="72sp"
+        android:gravity="center"
+        android:paddingTop="10dp"
+         />
+       
+	<TextView
+	    android:id="@+id/excercise_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="32sp"
+        android:gravity="center"
+        android:layout_below="@id/countdown_excercise"/>
+	            
+	         
+</RelativeLayout>
+
+    
+	    
+	
+    

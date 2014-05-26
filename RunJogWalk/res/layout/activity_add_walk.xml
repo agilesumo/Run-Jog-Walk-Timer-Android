@@ -41,10 +41,10 @@
 		android:paddingTop="7dp" >
 		
 	  
-	  	<kankan.wheel.widget.WheelView android:id="@+id/hour"
+	  	<kankan.wheel.widget.WheelView android:id="@+id/mins"
 			android:layout_height="wrap_content"
 			android:layout_width="140dp"/>
-		<kankan.wheel.widget.WheelView android:id="@+id/mins"
+		<kankan.wheel.widget.WheelView android:id="@+id/secs"
 			android:layout_height="wrap_content"
 			android:layout_width="140dp"/>
 	</LinearLayout>
