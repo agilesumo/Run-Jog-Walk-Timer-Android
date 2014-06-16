@@ -3,112 +3,41 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent" 
         android:orientation="vertical"
-        android:padding="8dp"
+        android:padding="15dp"
         tools:context=".MainActivity"
         android:baselineAligned="false">
         
-	    <LinearLayout 
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:orientation="horizontal"
-	        android:paddingBottom="10dp"
-	         >
+	   
 	           
 		    <Button
-		        android:id="@+id/runBtn"
-		        android:text="@string/add_run_btn"
-		        android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:onClick="onClick" 
-		        android:layout_weight="32"/>	  
-		    
-		    <Button
-		        android:id="@+id/jogBtn"
-		        android:text="@string/add_jog_btn"
-		        android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:onClick="onClick"
-		        android:layout_weight="32" />	  
-		           		    
-		    <Button
-		        android:id="@+id/walkBtn"
-		        android:text="@string/add_walk_btn"
-		        android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:onClick="onClick"
-		        android:layout_weight="36" />	  
-		           
-	    
-	    </LinearLayout>
-	   
-	      
-	        <LinearLayout 
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:orientation="horizontal"
-	        android:paddingBottom="10dp"
-	         >
-	           
-		    <Button
-		        android:id="@+id/startBtn"
-		        android:text="@string/start_btn_text"
-		        android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:onClick="onClick" 
-		        android:layout_weight="45"
-		        android:background="@drawable/green_button"
-		        android:layout_marginLeft="4dp"
-		        android:visibility="gone" />
-		    
-		    <Button
-		        android:id="@+id/clearBtn"
-		        android:text="@string/clear_btn_text"
-		        android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:onClick="onClick"
-		        android:layout_weight="45"
-		        android:background="@drawable/red_button" 
-		        android:layout_marginLeft="4dp"
-		        android:visibility="gone"/>	  
-		           		    
-		  	  
-		           
-	    
-	    </LinearLayout>
-	   
-	        <TextView
-	            android:id="@+id/total_duration_text"
+		        android:id="@+id/createWorkoutBtn"
+		        android:text="@string/add_workout_btn"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:textSize="16sp" 
-		        android:layout_gravity="center_horizontal"
-		        android:visibility="gone"/>
-	   
-	        <TextView
-	            android:id="@+id/add_new_text"
-		        android:text="@string/add_new_text"
+		        android:onClick="createClicked" 
+		        android:paddingTop="20dp"
+		        android:paddingBottom="20dp"
+		        android:paddingLeft="35dp"
+		        android:paddingRight="35dp"
+		        android:layout_gravity="center_horizontal" />
+		        
+		    
+		    <TextView
+		        android:id="@+id/savedWorkoutsHeading"
+		        android:text="@string/saved_workouts_heading"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:textSize="18sp"
-		        android:paddingTop="15dp"/>
+		        android:layout_gravity="center_horizontal" 
+		        android:textSize="24sp"
+		        android:layout_marginBottom="15dp"
+		        android:layout_marginTop="25dp"/>
+		        
 	        
-	            <ListView
-			        android:id="@android:id/list"
-			        android:layout_width="match_parent"
-			        android:layout_height="wrap_content"
-			        android:text="hello" />
-	            
-		           
-	       <!--  
-	        
-	        <LinearLayout
-	            android:id="@+id/list_excercises"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:orientation="vertical"
-	         >
-		    </LinearLayout>
-	        -->
+	        <ListView
+			    android:id="@android:id/list"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content" />
+	       
 	       
 	    
 </LinearLayout> 

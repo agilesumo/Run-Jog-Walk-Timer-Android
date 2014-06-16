@@ -16,9 +16,15 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.Menu;
@@ -26,6 +32,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -59,8 +66,12 @@ public class WorkoutTimerActivity extends Activity {
 	private String currentName;
 	
 	private int counter = 0;
+	
+	private long vibrateDuration;
 
 	private Vibrator v;
+	
+    private boolean workoutFinished = false;
 	
 	private long millisRemaining;
 	
@@ -68,21 +79,38 @@ public class WorkoutTimerActivity extends Activity {
 	NotificationCompat.Builder builder;
 	private int NOTIFICATION = 10001; //Any unique number for this notification
 	
+	private long workoutId;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        
+		if(SettingsActivity.useVibration){
+			setupVibrator();
+		}
+		
 
 		setContentView(R.layout.activity_workout_timer);
+		
+		int currentOrientation = getResources().getConfiguration().orientation;
+		if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+		   setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+		}
+		else {
+		   setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+		}
+		
+		
+		Intent intent = getIntent();
+		workoutId = intent.getLongExtra(WorkoutActivity.EXTRA_WORKOUT_ID, 0);
+
 		datasource = new ExcercisesDataSource(this);
 	    datasource.open();
 
-	    totalRemaining = datasource.getTotalDuration();
+	    totalRemaining = datasource.getWorkoutDuration(workoutId);
 	    long hoursInMilli = totalRemaining.getHours()* 60 * 60 *1000;
 	    long minsInMilli = totalRemaining.getMinutes() * 60 * 1000;
 	    long secsInMilli = totalRemaining.getSeconds() * 1000;
-	    List<Excercise> excercises = datasource.getAllExcercises();
+	    List<Excercise> excercises = datasource.getExcercisesByWorkoutId(workoutId);
 	    
 	    remaining = (TextView)findViewById(R.id.overall_remaining);
 		remaining.setText(totalRemaining.toString());
@@ -111,20 +139,11 @@ public class WorkoutTimerActivity extends Activity {
 		showNotification(currentName);
 		updateLayout();
 
-		
-		
-		
-
-		
-	    
-	    
 	    long totalWorkoutInMilli = hoursInMilli + minsInMilli + secsInMilli;
 	    
         timer = new Timer (totalWorkoutInMilli, INTERVAL); // timer ticks 1 time per second
         timer.start();
 	    
-		
-	
 	}	
 		
 	
@@ -154,6 +173,14 @@ public class WorkoutTimerActivity extends Activity {
     
 	public void quitClicked(View view) {
 		timer.cancel();
+		datasource.close();
+		finish();
+	}
+	
+	/** Called when the user clicks close button after timer has finished */
+    
+	public void closeClicked(View view) {
+		datasource.close();
 		finish();
 	}
 	
@@ -162,7 +189,6 @@ public class WorkoutTimerActivity extends Activity {
 	public void pauseClicked(View view) {
 		timer.cancel();
 		Button pauseButton = (Button)findViewById(R.id.pauseBtn);
-		Button quitButton =(Button)findViewById(R.id.quitBtn);
 		Button resumeButton = (Button)findViewById(R.id.resumeBtn);
 		
 		pauseButton.setVisibility(View.INVISIBLE);
@@ -207,6 +233,12 @@ public class WorkoutTimerActivity extends Activity {
 	  @Override
 	  protected void onResume() {
 	    super.onResume();
+	    if(SettingsActivity.keepScreenAwake == true){
+		    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	    }
+	    else {
+	    	getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	    }
 	  }
 	
 	  @Override
@@ -221,9 +253,16 @@ public class WorkoutTimerActivity extends Activity {
 		  super.onDestroy();
 	  }
 	  
+	  private void setupVibrator(){
+	      v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		  SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		  String vibrateDurationPref = sharedPref.getString(SettingsActivity.KEY_PREF_VIBRATE_DURATION, "");
+		  long durationinMilliSecs = Long.valueOf(vibrateDurationPref.substring(0,1)).longValue() * 1000;
+		  vibrateDuration = durationinMilliSecs;
+	  }
+	  
 	  
 	  private void updateLayout(){
-		  excerciseLabel.setText(currentName);
 		  excerciseCountdown.setText(durationRemaining.toString());
 
 
@@ -233,25 +272,75 @@ public class WorkoutTimerActivity extends Activity {
 				excerciseLabel.setText("RUN");
 				updateNotification("Run");
 
-
-				
 			}
 			else if(currentName.equals("Jog")){
 				workoutMainLayout.setBackgroundColor(getResources().getColor(R.color.yellow));
 				excerciseLabel.setText("JOG");
 				updateNotification("Jog");
 
-
-				
 			}
 			else {
 				workoutMainLayout.setBackgroundColor(getResources().getColor(R.color.red));
 				excerciseLabel.setText("Walk");
 				updateNotification("Walk");
 
-
 			}
 			
+	  }
+	  
+	  private void playAudio(){
+	      if(SettingsActivity.useVibration == true){
+			  v.vibrate(vibrateDuration);	  
+	      }
+	      if(SettingsActivity.useAudio == true){
+	    	  
+	      
+		      MediaPlayer mPlayer;
+	   		  if(workoutFinished == true){
+				  mPlayer = MediaPlayer.create(WorkoutTimerActivity.this, R.raw.finished_tone);
+			  }
+			  else if(currentName.equals("Run")){
+				  mPlayer = MediaPlayer.create(WorkoutTimerActivity.this, R.raw.run_tone);
+			  }
+			  else if(currentName.equals("Jog")){
+				  mPlayer = MediaPlayer.create(WorkoutTimerActivity.this, R.raw.jog_tone);
+			  }
+			  else {
+				  mPlayer = MediaPlayer.create(WorkoutTimerActivity.this, R.raw.walk_tone);
+			  }
+	          mPlayer.setOnCompletionListener(new OnCompletionListener() {
+	              public void onCompletion(MediaPlayer mp) {
+	                  mp.stop();
+	                  mp.release();
+	                  mp = null;
+	        		  if(workoutFinished == true){
+	        			  mp = MediaPlayer.create(WorkoutTimerActivity.this, R.raw.finished);
+	        		  }
+	        		  else if(currentName.equals("Run")){
+	        			  mp = MediaPlayer.create(WorkoutTimerActivity.this, R.raw.run);
+	        		  }
+	        		  else if(currentName.equals("Jog")){
+	        			  mp = MediaPlayer.create(WorkoutTimerActivity.this, R.raw.jog);
+	        		  }
+	        		  else {
+	        			  mp = MediaPlayer.create(WorkoutTimerActivity.this, R.raw.walk);
+	        		  }
+	                  mp.setOnCompletionListener(new OnCompletionListener() {
+	                      public void onCompletion(MediaPlayer theMp) {
+	                          theMp.stop();
+	                          theMp.release();
+	                          theMp = null;
+	                      }
+	                  });
+	                  mp.start();
+	              }
+	          });
+			  mPlayer.start();
+	      }
+		  
+
+
+		  
 	  }
 	  
 	  private void showNotification(String excerciseStr) {
@@ -299,8 +388,11 @@ public class WorkoutTimerActivity extends Activity {
 		
 		    @Override
 		    public void onFinish() {
-		    	
-		
+		    	setContentView(R.layout.activity_workout_timer_finished);
+		    	updateNotification("Workout Finished");
+		    	workoutFinished = true;
+		    	playAudio();
+               
 		    }
 			
 			@Override
@@ -311,12 +403,12 @@ public class WorkoutTimerActivity extends Activity {
 		    	durationRemaining.minusOneSecond();
 		    	excerciseCountdown.setText(durationRemaining.toString());
 		    	if(durationRemaining.isZero()){
-		    		// Vibrate for 500 milliseconds
-				    v.vibrate(1000);
-		    		counter++;
+				    counter++;
 		    		durationRemaining = excercisesDurations.get(counter);
 		    		currentName = excerciseNames.get(counter);
 		    		updateLayout();
+		    		playAudio();
+
 		    	}
 		    	millisRemaining = millisUntilFinished;
 			    	

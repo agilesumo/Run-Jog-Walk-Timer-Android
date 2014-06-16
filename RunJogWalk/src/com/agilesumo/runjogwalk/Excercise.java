@@ -6,6 +6,7 @@ public class Excercise {
   private long hours;
   private long minutes;
   private long seconds;
+  private long workoutId;
   
   public long getId() {
       return id;
@@ -13,6 +14,14 @@ public class Excercise {
 
   public void setId(long id) {
       this.id = id;
+  }
+  
+  public long getWorkoutId() {
+      return workoutId;
+  }
+
+  public void setWorkoutId(long id) {
+      workoutId = id;
   }
 
   public long getHours() {

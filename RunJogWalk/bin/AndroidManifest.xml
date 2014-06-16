@@ -41,6 +41,17 @@
         </activity>
         
         <activity
+            android:name="com.agilesumo.runjogwalk.WorkoutActivity"
+            android:label="@string/title_activity_workout"
+            android:parentActivityName="com.agilesumo.runjogwalk.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.agilesumo.runjogwalk.MainActivity" />
+
+        </activity>
+        
+        
+        <activity
             android:name="com.agilesumo.runjogwalk.AddJogActivity"
             android:label="@string/title_activity_add_jog"
             android:parentActivityName="com.agilesumo.runjogwalk.MainActivity" >
@@ -65,12 +76,18 @@
             android:name="com.agilesumo.runjogwalk.WorkoutTimerActivity"
             android:label="@string/title_activity_workout_timer"
             android:parentActivityName="com.agilesumo.runjogwalk.MainActivity" 
-            android:launchMode="singleTop"
-            >
+            android:launchMode="singleTop" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.agilesumo.runjogwalk.MainActivity" />
 
+        </activity>
+        
+                 
+          <activity
+            android:name="com.agilesumo.runjogwalk.SettingsActivity"
+            android:label="@string/action_settings">
+          
         </activity>
         
     </application>

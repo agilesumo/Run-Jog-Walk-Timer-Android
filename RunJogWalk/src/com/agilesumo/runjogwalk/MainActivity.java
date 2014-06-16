@@ -4,12 +4,16 @@ package com.agilesumo.runjogwalk;
 
 
 import java.util.List;
+
+
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -17,9 +21,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +36,9 @@ import android.widget.ToggleButton;
 public class MainActivity extends ListActivity {
 
 	//=======Constants========
+	public final static String EXTRA_WORKOUT_NAME = "com.agilesumo.runjogwalk.WORKOUT_NAME";
+	public final static String EXTRA_WORKOUT_ID = "com.agilesumo.runjogwalk.ID";
+
 
 	
 	// =======================
@@ -37,9 +47,8 @@ public class MainActivity extends ListActivity {
 	private ExcercisesDataSource datasource;
 
 		
-	private SharedPreferences settings;
 	
-	ArrayAdapter<Excercise> adapter;
+	ArrayAdapter<Workout> adapter;
 	
 	private TextView addNewPrompt;
 	
@@ -59,27 +68,60 @@ public class MainActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		
+		
+		TextView savedWorkoutsHeading = (TextView)findViewById(R.id.savedWorkoutsHeading);
+		
 		datasource = new ExcercisesDataSource(this);
 	    datasource.open();
-
-	    List<Excercise> values = datasource.getAllExcercises();
+        
+	    List<Workout> values = datasource.getAllWorkouts();
 	    
-	    adapter = new ArrayAdapter<Excercise>(this, android.R.layout.simple_list_item_1, values);
-		    setListAdapter(adapter);
+	    adapter = new ArrayAdapter<Workout>(this, R.layout.workout_list_item, R.id.listTextView, values);
+		setListAdapter(adapter);
+		
+		ListView workoutsList = getListView();
 		    
 		
-		values = datasource.getAllExcercises();
-		addNewPrompt = (TextView)findViewById(R.id.add_new_text);
-		totalDurationText = (TextView)findViewById(R.id.total_duration_text);
-		startBtn = (Button)findViewById(R.id.startBtn);
-	    clearBtn = (Button)findViewById(R.id.clearBtn);
-		if(!values.isEmpty()){
-			addNewPrompt.setVisibility(View.GONE);
-			showViews();
+		if(values.isEmpty()){
+			savedWorkoutsHeading.setVisibility(View.INVISIBLE);
 	    }
+		else{
+			savedWorkoutsHeading.setVisibility(View.VISIBLE);
+		}
+		
+	    workoutsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+	        @Override
+	        public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+	        	try {
+					Intent intent = new Intent(MainActivity.this, WorkoutActivity.class);
+				    List<Workout> values = datasource.getAllWorkouts();
 
-	    // use the SimpleCursorAdapter to show the
-	    // elements in a ListView
+					Workout workout = values.get(position);
+					String workoutName = workout.getWorkoutName();
+					long workoutId = workout.getId();
+					
+					intent.putExtra(EXTRA_WORKOUT_ID, workoutId);
+	                intent.putExtra(EXTRA_WORKOUT_NAME, workoutName);
+					
+					
+		            startActivity(intent);
+		            					
+				}
+				catch (Exception e) {
+				    // handle any errors
+				    Log.e("ErrorMainActivity", "Error in activity", e);  // log the error
+				    // Also let the user know something went wrong
+				    Toast.makeText(
+				        getApplicationContext(),
+				        e.getClass().getName() + " " + e.getMessage(),
+				        Toast.LENGTH_LONG).show();
+				}
+	          
+	        }	
+	      });
+	    
+
 	    
 	      
 	}
@@ -93,14 +135,16 @@ public class MainActivity extends ListActivity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    /* Handle item selection
+	   
+		
 	    switch (item.getItemId()) {
-	        case R.id.action_close:
-	            finish();
-	            return true;
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }*/
+
+	        case R.id.action_settings:
+		        // Launch settings activity
+		        Intent intent = new Intent(this, SettingsActivity.class);
+		        startActivity(intent);
+		        break;
+	    }
 		return true;
 	}
 	
@@ -115,138 +159,70 @@ public class MainActivity extends ListActivity {
 	
 	protected void onStop() {
 		super.onStop();
-		/*
-	    SharedPreferences.Editor editor = settings.edit();
-	    editor.putBoolean("musicOn", musicBtn.isChecked());
-	    // Commit the edits!
-        editor.commit();*/
+		
 	}
 
+	/** Called when the user clicks the add create workout button */
+	
+	  public void createClicked(View view){
+		  
+		  AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+		  alert.setTitle("CREATE NEW WORKOUT");
+		  alert.setMessage("Workout Name");
+
+		  // Set an EditText view to get user input 
+		  final EditText input = new EditText(this);
+		  alert.setView(input);
+
+		  alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		      public void onClick(DialogInterface dialog, int whichButton) {
+	              String workoutName = input.getText().toString();
+	              datasource = new ExcercisesDataSource(MainActivity.this);
+				  datasource.open();
+				  // save the new comment to the database
+				  Workout newWorkout = datasource.createWorkout(workoutName);
+				  datasource.close();
+				  
+				  Intent intent = new Intent(MainActivity.this, WorkoutActivity.class);
+				  long id = newWorkout.getId();
+                  intent.putExtra(EXTRA_WORKOUT_ID, id);
+                  intent.putExtra(EXTRA_WORKOUT_NAME, workoutName);
+                  startActivity(intent);
+
+		      }
+		  });
+
+		  alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		      public void onClick(DialogInterface dialog, int whichButton) {
+		        // Canceled.
+		      }
+		  });
+
+		  alert.show();
+		  
+	  }
 	
 	
 	
-	/** Called when the user clicks the add run button */
-
-	  public void onClick(View view) {
-		    @SuppressWarnings("unchecked")
-		    ArrayAdapter<Excercise> adapter = (ArrayAdapter<Excercise>) getListAdapter();
-
-
-		    switch (view.getId()) {
-			    case R.id.runBtn:
-			    	try {
-						Intent intent = new Intent(this, AddRunActivity.class);
-			            startActivity(intent);
-			            break;
-						
-					}
-					catch (Exception e) {
-					    // handle any errors
-					    Log.e("ErrorMainActivity", "Error in activity", e);  // log the error
-					    // Also let the user know something went wrong
-					    Toast.makeText(
-					        getApplicationContext(),
-					        e.getClass().getName() + " " + e.getMessage(),
-					        Toast.LENGTH_LONG).show();
-					}
-			    case R.id.jogBtn:
-			    	try {
-						Intent intent = new Intent(this, AddJogActivity.class);
-			            startActivity(intent);
-			            break;
-						
-					}
-					catch (Exception e) {
-					    // handle any errors
-					    Log.e("ErrorMainActivity", "Error in activity", e);  // log the error
-					    // Also let the user know something went wrong
-					    Toast.makeText(
-					        getApplicationContext(),
-					        e.getClass().getName() + " " + e.getMessage(),
-					        Toast.LENGTH_LONG).show();
-					}
-			    	
-			    case R.id.walkBtn:
-			    	try {
-						Intent intent = new Intent(this, AddWalkActivity.class);
-			            startActivity(intent);
-			            break;
-						
-					}
-					catch (Exception e) {
-					    // handle any errors
-					    Log.e("ErrorMainActivity", "Error in activity", e);  // log the error
-					    // Also let the user know something went wrong
-					    Toast.makeText(
-					        getApplicationContext(),
-					        e.getClass().getName() + " " + e.getMessage(),
-					        Toast.LENGTH_LONG).show();
-					}
-			    	
-			    case R.id.startBtn:
-			    	try {
-						Intent intent = new Intent(this, WorkoutTimerActivity.class);
-			            startActivity(intent);
-			            break;
-						
-					}
-					catch (Exception e) {
-					    // handle any errors
-					    Log.e("ErrorMainActivity", "Error in activity", e);  // log the error
-					    // Also let the user know something went wrong
-					    Toast.makeText(
-					        getApplicationContext(),
-					        e.getClass().getName() + " " + e.getMessage(),
-					        Toast.LENGTH_LONG).show();
-					}
-			    	
-			    
-			      
-			    /*	delete the first item in the list and the database	
-			    case R.id.delete:
-				    if (getListAdapter().getCount() > 0) {
-					    excercise = (Excercise) getListAdapter().getItem(0);
-					    datasource.deleteExcercise(excercise);;
-					    adapter.remove(excercise);
-						adapter.notifyDataSetChanged();		
-				    }
-			        break;*/
-			    case R.id.clearBtn:
-			    	datasource.deleteAllExcercises();
-			    	adapter.clear();
-			    	adapter.notifyDataSetChanged();
-					addNewPrompt.setVisibility(View.VISIBLE);
-					hideViews();
-
-			        break;  
-			      
-		    }
-
-	  }  
-	  
-	  
 	 @SuppressWarnings("unchecked")
 	@Override
 	  protected void onResume() {
-	   Log.d("AndyDebuggingDelete", "got to on resume."); 
 
 	    datasource.open();
 	    super.onResume();
 
-		if(!datasource.getAllExcercises().isEmpty()) {
+		if(!datasource.getAllWorkouts().isEmpty()) {
 			
-		    addNewPrompt.setVisibility(View.GONE);
-		    showViews();
- 
-		    adapter.clear();
-		    addAllData(datasource.getAllExcercises(),adapter);
+            adapter.clear();
+		    addAllWorkouts(datasource.getAllWorkouts(),adapter);
+		    adapter.notifyDataSetChanged();
+		}
+		else {
+			adapter.clear();
 		    adapter.notifyDataSetChanged();
 		}
 		
-		else {
-			addNewPrompt.setVisibility(View.VISIBLE);
-			hideViews();
-		}
       }
 
 	  @Override
@@ -255,36 +231,22 @@ public class MainActivity extends ListActivity {
 	    super.onPause();
 	  }
 	  
+
+	  
 	 // method added because ArrayAdapter.addAll() method is not supported in older versions of android api
 	@SuppressLint("NewApi")
-	private void addAllData(List<Excercise> excercises, ArrayAdapter<Excercise> theAdapter) {
-		    if (excercises != null) {
+	private void addAllWorkouts(List<Workout> workouts, ArrayAdapter<Workout> theAdapter) {
+		    if (workouts != null) {
 		        //If the platform supports it, use addAll, otherwise add in loop
 		        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-		            theAdapter.addAll(excercises);
+		            theAdapter.addAll(workouts);
 		        } else {
-		            for(Excercise excercise: excercises) {
-		                theAdapter.add(excercise);
+		            for(Workout workout: workouts) {
+		                theAdapter.add(workout);
 		            }
 		        }
 		    }
 	}
 	
-	// helper method to hide certain views in activity
-	private void hideViews(){
-	    startBtn.setVisibility(View.GONE);
-	    clearBtn.setVisibility(View.GONE);
-	    totalDurationText.setVisibility(View.GONE);
-
-
-	}
-	// helper method to show certain views in activity
-	private void showViews(){
-		startBtn.setVisibility(View.VISIBLE);
-	    clearBtn.setVisibility(View.VISIBLE);
-	    TimeDuration totalDuration = datasource.getTotalDuration();
-	    totalDurationText.setText("Total Duration: " + totalDuration.toStringLong());
-	    totalDurationText.setVisibility(View.VISIBLE);
-		
-	}
+	
 }

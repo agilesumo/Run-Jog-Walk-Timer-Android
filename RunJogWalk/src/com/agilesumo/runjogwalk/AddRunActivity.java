@@ -153,10 +153,12 @@ public class AddRunActivity extends Activity {
 				    	hours++;
 				    	mins -= 60;
 				    }
+				    Intent intent = getIntent();
+					long workoutId = intent.getLongExtra(WorkoutActivity.EXTRA_WORKOUT_ID, 0);
 				    datasource = new ExcercisesDataSource(this);
 				    datasource.open();
 				    // save the new comment to the database
-				    datasource.createExcercise("Run", hours, mins, secs);
+				    datasource.createExcercise("Run", hours, mins, secs, workoutId);
 				    datasource.close();
 					finish();
 		
