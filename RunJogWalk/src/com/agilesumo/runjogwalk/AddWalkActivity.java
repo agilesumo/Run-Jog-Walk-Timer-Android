@@ -130,7 +130,6 @@ public class AddWalkActivity extends Activity {
 		switch (view.getId()) {
 		    case R.id.btnAddWalk:
 				try {
-			    	Log.d("AndyDebuggingAddJog", "got here start )))"); 
 		
 			    	long hours = 0;	
 					long mins = minutes.getCurrentItem();

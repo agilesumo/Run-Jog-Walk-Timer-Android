@@ -139,7 +139,6 @@ public class AddRunActivity extends Activity {
 		switch (view.getId()) {
 		    case R.id.btnAddRun:
 				try {
-			    	Log.d("AndyDebuggingDelete", "got here 1."); 
 		
 					long hours = 0;
 			    	long mins = minutes.getCurrentItem();

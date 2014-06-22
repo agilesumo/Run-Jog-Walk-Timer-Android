@@ -12,6 +12,9 @@ import java.util.List;
 
 
 
+
+
+
 import android.graphics.Typeface;
 import android.inputmethodservice.ExtractEditText;
 import android.os.Build;
@@ -56,11 +59,7 @@ public class WorkoutActivity extends ListActivity {
 	private TextView totalDurationText;
 	
 	private Button startBtn;
-	
-	private Button clearBtn;
-	
-	private Button deleteBtn;
-	
+			
 	private long workoutId;
 
 	
@@ -92,18 +91,16 @@ public class WorkoutActivity extends ListActivity {
 
 	    List<Excercise> values = datasource.getExcercisesByWorkoutId(workoutId);
 	    
-	    adapter = new ArrayAdapter<Excercise>(this, android.R.layout.simple_list_item_1, values);
+	    //adapter = new ArrayAdapter<Excercise>(this, android.R.layout.simple_list_item_1, values);
+	    adapter = new ArrayAdapter<Excercise>(this, R.layout.excercise_list_item, R.id.listTextViewExcercise, values);
 		setListAdapter(adapter);
 		    
 		
 		addNewPrompt = (TextView)findViewById(R.id.add_new_text);
 		totalDurationText = (TextView)findViewById(R.id.total_duration_text);
 		startBtn = (Button)findViewById(R.id.startBtn);
-	    clearBtn = (Button)findViewById(R.id.clearBtn);
-	    deleteBtn = (Button)findViewById(R.id.deleteBtn);
 		if(!values.isEmpty()){
 			addNewPrompt.setVisibility(View.GONE);
-			deleteBtn.setVisibility(View.GONE);
 			showViews();
 	    }
 
@@ -117,7 +114,7 @@ public class WorkoutActivity extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.menu_workout, menu);
 		return true;
 	}
 	
@@ -126,10 +123,21 @@ public class WorkoutActivity extends ListActivity {
 	    switch (item.getItemId()) {
 
         case R.id.action_settings:
-	        // Launch settings activity
-	        Intent intent = new Intent(this, SettingsActivity.class);
-	        startActivity(intent);
-	        break;
+        	if (Build.VERSION.SDK_INT < 11) {
+		        Intent intent = new Intent(this, SettingsActivity.class);
+		        startActivity(intent);
+		        break;
+        	}
+        	else{
+		        Intent intent = new Intent(this, SettingsAPI11PlusActivity.class);
+		        startActivity(intent);
+		        break;
+        	}
+        case R.id.action_delete:
+        	datasource.deleteWorkout(workoutId);
+	    	finish();
+	    	break;  
+        	
     }
 	return true;
 	}
@@ -233,23 +241,7 @@ public class WorkoutActivity extends ListActivity {
 					        e.getClass().getName() + " " + e.getMessage(),
 					        Toast.LENGTH_LONG).show();
 					}
-			    	
-			    case R.id.clearBtn:
-			    	datasource.deleteWorkoutExcercises(workoutId);
-			    	adapter.clear();
-			    	adapter.notifyDataSetChanged();
-					addNewPrompt.setVisibility(View.VISIBLE);
-					deleteBtn.setVisibility(View.VISIBLE);
-					hideViews();
-
-			        break;
-			        
-			    case R.id.deleteBtn:
-			    	datasource.deleteWorkout(workoutId);
-			    	finish();
-
-			        break;  
-			      
+			    	    
 		    }
 
 	  }  
@@ -265,7 +257,6 @@ public class WorkoutActivity extends ListActivity {
 		if(!datasource.getExcercisesByWorkoutId(workoutId).isEmpty()) {
 
 		    addNewPrompt.setVisibility(View.GONE);
-		    deleteBtn.setVisibility(View.GONE);
 		    showViews();
 
 		    adapter.clear();
@@ -278,7 +269,6 @@ public class WorkoutActivity extends ListActivity {
 				
 			
 				addNewPrompt.setVisibility(View.VISIBLE);
-				deleteBtn.setVisibility(View.VISIBLE);
 				hideViews();
 			}
 			catch (Exception e) {
@@ -317,7 +307,6 @@ public class WorkoutActivity extends ListActivity {
 	// helper method to hide certain views in activity
 	private void hideViews(){
 	    startBtn.setVisibility(View.GONE);
-	    clearBtn.setVisibility(View.GONE);
 	    totalDurationText.setVisibility(View.GONE);
 
 
@@ -325,7 +314,6 @@ public class WorkoutActivity extends ListActivity {
 	// helper method to show certain views in activity
 	private void showViews(){
 		startBtn.setVisibility(View.VISIBLE);
-	    clearBtn.setVisibility(View.VISIBLE);
 	    TimeDuration totalDuration = datasource.getWorkoutDuration(workoutId);
 	    totalDurationText.setText("TOTAL DURATION: " + totalDuration.toStringLong());
 	    totalDurationText.setVisibility(View.VISIBLE);

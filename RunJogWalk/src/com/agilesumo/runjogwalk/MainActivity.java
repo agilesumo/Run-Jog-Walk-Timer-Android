@@ -45,20 +45,15 @@ public class MainActivity extends ListActivity {
 	
 	// =====Instance variables=====
 	private ExcercisesDataSource datasource;
-
-		
 	
+	private TextView savedWorkoutsHeading;
+	
+	private Button createWorkoutBtn;
 	ArrayAdapter<Workout> adapter;
 	
-	private TextView addNewPrompt;
-	
-	private TextView totalDurationText;
-	
-	private Button startBtn;
-	
-	private Button clearBtn;
 
 	
+		
 	// ===========================
 
 
@@ -70,7 +65,7 @@ public class MainActivity extends ListActivity {
 		
 		
 		
-		TextView savedWorkoutsHeading = (TextView)findViewById(R.id.savedWorkoutsHeading);
+		savedWorkoutsHeading = (TextView)findViewById(R.id.savedWorkoutsHeading);
 		
 		datasource = new ExcercisesDataSource(this);
 	    datasource.open();
@@ -140,10 +135,22 @@ public class MainActivity extends ListActivity {
 	    switch (item.getItemId()) {
 
 	        case R.id.action_settings:
-		        // Launch settings activity
-		        Intent intent = new Intent(this, SettingsActivity.class);
-		        startActivity(intent);
-		        break;
+	        	if (Build.VERSION.SDK_INT < 11) {
+			        Intent intent = new Intent(this, SettingsActivity.class);
+			        startActivity(intent);
+			        break;
+	        	}
+	        	else{
+	        		try{
+	        			Intent intent = new Intent(this, SettingsAPI11PlusActivity.class);
+				        startActivity(intent);
+				        break;
+	        		}
+	        		catch(Exception e){
+	        			Log.d("Andy",e.getMessage());
+	        		}
+			        
+	        	}
 	    }
 		return true;
 	}
@@ -217,11 +224,18 @@ public class MainActivity extends ListActivity {
             adapter.clear();
 		    addAllWorkouts(datasource.getAllWorkouts(),adapter);
 		    adapter.notifyDataSetChanged();
+			savedWorkoutsHeading.setVisibility(View.VISIBLE);
+
 		}
 		else {
 			adapter.clear();
 		    adapter.notifyDataSetChanged();
+			savedWorkoutsHeading.setVisibility(View.INVISIBLE);
+			createWorkoutBtn = (Button)findViewById(R.id.createWorkoutBtn);
+			createClicked(createWorkoutBtn);
+
 		}
+		
 		
       }
 

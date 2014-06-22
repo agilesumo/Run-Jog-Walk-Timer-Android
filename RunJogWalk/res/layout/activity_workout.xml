@@ -46,43 +46,25 @@
 	    <LinearLayout 
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:orientation="horizontal" >
+	        android:orientation="horizontal"
+	        android:paddingBottom="5dp" >
 	           
 		    <Button
 		        android:id="@+id/startBtn"
 		        android:text="@string/start_btn_text"
-		        android:layout_width="0dp"
+		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:onClick="onClick" 
-		        android:layout_weight="45"
+		        android:layout_gravity="center_horizontal"
 		        android:background="@drawable/green_button"
 		        android:layout_marginLeft="4dp"
 		        android:visibility="gone" />
 		    
-		    <Button
-		        android:id="@+id/clearBtn"
-		        android:text="@string/clear_btn_text"
-		        android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:onClick="onClick"
-		        android:layout_weight="45"
-		        android:background="@drawable/red_button" 
-		        android:layout_marginLeft="4dp"
-		        android:visibility="gone"/>	  
-		           		    
-		  	  
-		           
-	    
+		     
+	
 	    </LinearLayout>
 	    
-	    <Button
-	        android:id="@+id/deleteBtn"
-	        android:text="@string/delete_btn_text"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:onClick="onClick" 
-	        android:background="@drawable/red_button"
-	        android:layout_marginBottom="8dp" />
+
 	   
         <LinearLayout 
 	        android:layout_width="match_parent"

@@ -6,7 +6,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="9"
+        android:minSdkVersion="10"
         android:targetSdkVersion="19" />
     
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -75,11 +75,11 @@
           <activity
             android:name="com.agilesumo.runjogwalk.WorkoutTimerActivity"
             android:label="@string/title_activity_workout_timer"
-            android:parentActivityName="com.agilesumo.runjogwalk.MainActivity" 
+            android:parentActivityName="com.agilesumo.runjogwalk.WorkoutActivity" 
             android:launchMode="singleTop" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.agilesumo.runjogwalk.MainActivity" />
+                android:value="com.agilesumo.runjogwalk.WorkoutActivity" />
 
         </activity>
         
@@ -88,6 +88,11 @@
             android:name="com.agilesumo.runjogwalk.SettingsActivity"
             android:label="@string/action_settings">
           
+        </activity>
+        
+        <activity
+            android:name="com.agilesumo.runjogwalk.SettingsAPI11PlusActivity"
+            android:label="@string/action_settings">
         </activity>
         
     </application>

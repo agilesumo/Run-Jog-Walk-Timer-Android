@@ -14,8 +14,8 @@
         android:dialogTitle="@string/pref_vibrate_duration"
         android:entries="@array/pref_vibrate_duration_entries"
         android:entryValues="@array/pref_vibrate_duration_values"
-        android:defaultValue="2"
-        android:summary="2 secs" />
+        android:defaultValue="4 secs"
+        android:summary="4 secs" />
     <CheckBoxPreference
         android:key="pref_screen_awake"
         android:title="@string/pref_screen_awake"

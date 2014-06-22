@@ -131,7 +131,6 @@ public class AddJogActivity extends Activity {
 		switch (view.getId()) {
 		    case R.id.btnAddJog:
 				try {
-			    	Log.d("AndyDebuggingAddJog", "got here start )))"); 
 		
 			    	long hours = 0;
 					long mins = minutes.getCurrentItem();

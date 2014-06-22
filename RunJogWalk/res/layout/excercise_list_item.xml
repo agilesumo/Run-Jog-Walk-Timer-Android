@@ -6,7 +6,7 @@
     
 
     <TextView
-	    android:id="@+id/listTextView"
+	    android:id="@+id/listTextViewExcercise"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:textColor="@color/blue"

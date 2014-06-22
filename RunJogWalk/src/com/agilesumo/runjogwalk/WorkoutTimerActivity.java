@@ -3,7 +3,6 @@ package com.agilesumo.runjogwalk;
 
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import com.agilesumo.runjogwalk.R;
@@ -21,6 +20,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
@@ -46,6 +46,7 @@ import android.widget.Toast;
 public class WorkoutTimerActivity extends Activity {
 	
 	
+	private static final String DEFAULT_VIRATE_DURAION ="4 secs";
 	
     private MoreAccurateTimer timer;
     private TimeDuration totalRemaining;
@@ -79,14 +80,54 @@ public class WorkoutTimerActivity extends Activity {
 	NotificationCompat.Builder builder;
 	private int NOTIFICATION = 10001; //Any unique number for this notification
 	
+	private boolean useVibration;
+	
+	private boolean useAudio;
+	
+	private boolean keepScreenAwake;
+	
 	private long workoutId;
+	
+	private String vibrateDurationPref;
+	
+	private SharedPreferences sharedPref;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        
-		if(SettingsActivity.useVibration){
-			setupVibrator();
+		
+			
+		sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		// Test if its the first time the app has been used. If so load default preferences.
+		if(!sharedPref.contains(SettingsKeys.KEY_PREF_VIBRATE)){ 
+			SharedPreferences.Editor prefEditor = sharedPref.edit();
+			prefEditor.putBoolean(SettingsKeys.KEY_PREF_VIBRATE, true);
+			prefEditor.putBoolean(SettingsKeys.KEY_PREF_AUDIO, true);
+			prefEditor.putBoolean(SettingsKeys.KEY_PREF_AWAKE, true);
+			prefEditor.putString(SettingsKeys.KEY_PREF_VIBRATE_DURATION, DEFAULT_VIRATE_DURAION);
+			prefEditor.commit();
+			useVibration = true;
+			useAudio = true;
+			keepScreenAwake = true;
+			vibrateDurationPref = DEFAULT_VIRATE_DURAION;
 		}
+		/*
+		Log.d("andy", "shared pref conains useVibration "+sharedPref.contains(SettingsKeys.KEY_PREF_VIBRATE));
+		Log.d("andy", "shared pref conains vinration duration "+sharedPref.contains(SettingsKeys.KEY_PREF_VIBRATE_DURATION));
+		Log.d("andy", "use Vibration Value is = " + sharedPref.getBoolean(SettingsKeys.KEY_PREF_VIBRATE, false));
+		Log.d("andy", "use Vibration duration Value is = " + sharedPref.getString(SettingsKeys.KEY_PREF_VIBRATE_DURATION, "default"));
+		*/
+
+		else {   	
+			useVibration = sharedPref.getBoolean(SettingsKeys.KEY_PREF_VIBRATE, false);
+			useAudio = sharedPref.getBoolean(SettingsKeys.KEY_PREF_AUDIO, false);
+			keepScreenAwake = sharedPref.getBoolean(SettingsKeys.KEY_PREF_AWAKE, false);
+			vibrateDurationPref = sharedPref.getString(SettingsKeys.KEY_PREF_VIBRATE_DURATION, "");
+		}	
+
+		if(useVibration){
+	        setupVibrate();
+		}
+		
 		
 
 		setContentView(R.layout.activity_workout_timer);
@@ -143,6 +184,9 @@ public class WorkoutTimerActivity extends Activity {
 	    
         timer = new Timer (totalWorkoutInMilli, INTERVAL); // timer ticks 1 time per second
         timer.start();
+
+	 
+	 
 	    
 	}	
 		
@@ -232,8 +276,10 @@ public class WorkoutTimerActivity extends Activity {
 	
 	  @Override
 	  protected void onResume() {
+		  
 	    super.onResume();
-	    if(SettingsActivity.keepScreenAwake == true){
+
+	    if(keepScreenAwake == true){
 		    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	    }
 	    else {
@@ -253,12 +299,11 @@ public class WorkoutTimerActivity extends Activity {
 		  super.onDestroy();
 	  }
 	  
-	  private void setupVibrator(){
+	  private void setupVibrate(){
 	      v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-		  SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-		  String vibrateDurationPref = sharedPref.getString(SettingsActivity.KEY_PREF_VIBRATE_DURATION, "");
 		  long durationinMilliSecs = Long.valueOf(vibrateDurationPref.substring(0,1)).longValue() * 1000;
 		  vibrateDuration = durationinMilliSecs;
+
 	  }
 	  
 	  
@@ -289,10 +334,11 @@ public class WorkoutTimerActivity extends Activity {
 	  }
 	  
 	  private void playAudio(){
-	      if(SettingsActivity.useVibration == true){
+		 
+	      if(useVibration == true){
 			  v.vibrate(vibrateDuration);	  
 	      }
-	      if(SettingsActivity.useAudio == true){
+	      if(useAudio == true){
 	    	  
 	      
 		      MediaPlayer mPlayer;
@@ -311,6 +357,7 @@ public class WorkoutTimerActivity extends Activity {
 	          mPlayer.setOnCompletionListener(new OnCompletionListener() {
 	              public void onCompletion(MediaPlayer mp) {
 	                  mp.stop();
+                      mp.reset();
 	                  mp.release();
 	                  mp = null;
 	        		  if(workoutFinished == true){
@@ -328,6 +375,7 @@ public class WorkoutTimerActivity extends Activity {
 	                  mp.setOnCompletionListener(new OnCompletionListener() {
 	                      public void onCompletion(MediaPlayer theMp) {
 	                          theMp.stop();
+	                          theMp.reset();
 	                          theMp.release();
 	                          theMp = null;
 	                      }
@@ -336,7 +384,9 @@ public class WorkoutTimerActivity extends Activity {
 	              }
 	          });
 			  mPlayer.start();
+	     
 	      }
+	  
 		  
 
 
@@ -411,8 +461,9 @@ public class WorkoutTimerActivity extends Activity {
 
 		    	}
 		    	millisRemaining = millisUntilFinished;
-			    	
-			}
+			
+		    }
+		 
 		}
 				
 

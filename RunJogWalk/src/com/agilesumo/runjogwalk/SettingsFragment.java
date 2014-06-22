@@ -8,32 +8,28 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-/*
- * Settings Activity for Older android devices ( API < 11 )
- */
-
-
-public class SettingsActivity extends PreferenceActivity
-implements OnSharedPreferenceChangeListener {
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+public class SettingsFragment extends PreferenceFragment
+	implements OnSharedPreferenceChangeListener {
 	
     private static int prefs = R.xml.preferences;
-     
-    @SuppressWarnings("deprecation")
-	@Override
-    protected void onCreate(final Bundle savedInstanceState)
-    {
+    
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		Preference vibrateDurationPref;
 		SharedPreferences sharedPrefs;
 
 		addPreferencesFromResource(prefs);
+
 		vibrateDurationPref = findPreference(SettingsKeys.KEY_PREF_VIBRATE_DURATION);
-        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPrefs  = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
 
         
         boolean useVibration = sharedPrefs.getBoolean(SettingsKeys.KEY_PREF_VIBRATE, true);
@@ -42,13 +38,11 @@ implements OnSharedPreferenceChangeListener {
 
         vibrateDurationPref.setEnabled(useVibration);
 
-        
     }
-
     
-    
-    @SuppressWarnings("deprecation")
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    	Log.d("andy","got to fragment listener 1");
+
 		if (key.equals(SettingsKeys.KEY_PREF_VIBRATE_DURATION)) {
     		Preference vibrateDurationPref;
     		vibrateDurationPref = findPreference(key);
@@ -61,26 +55,29 @@ implements OnSharedPreferenceChangeListener {
     		CheckBoxPreference useVibratePref;
             Preference vibrateDurationPref;
             useVibratePref = (CheckBoxPreference)findPreference(SettingsKeys.KEY_PREF_VIBRATE);
-            vibrateDurationPref = findPreference(SettingsKeys.KEY_PREF_VIBRATE_DURATION);
+          	vibrateDurationPref = findPreference(SettingsKeys.KEY_PREF_VIBRATE_DURATION);
             vibrateDurationPref.setEnabled(useVibratePref.isChecked());
+
             
 		}
-		
+
+
     }
-    
+	
     @Override
-    protected void onResume() {
+	public void onResume() {
         super.onResume();
-    	SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+    	SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         sharedPref.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
-    protected void onPause() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+	public void onPause() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         sharedPref.unregisterOnSharedPreferenceChangeListener(this);
         super.onPause();
 
     }
-
+    
+   
 }

@@ -45,7 +45,7 @@
         android:id="@+id/duration_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:paddingBottom="5dp"
         android:layout_above="@id/quitBtn"
         android:layout_alignParentRight="true"        
@@ -56,7 +56,7 @@
         android:id="@+id/remaining_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:layout_above="@id/pauseBtn"
         android:text="@string/remaining"
         android:paddingBottom="5dp"
@@ -66,7 +66,7 @@
         android:id="@+id/overall_remaining"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
+        android:textSize="28sp"
         android:layout_above="@id/remaining_label"
         
         />
@@ -75,7 +75,7 @@
         android:id="@+id/overall_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
+        android:textSize="28sp"
         android:layout_above="@id/duration_label"
         android:layout_alignParentRight="true" 
         />
