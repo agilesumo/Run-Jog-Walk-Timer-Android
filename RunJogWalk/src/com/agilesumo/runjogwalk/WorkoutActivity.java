@@ -104,9 +104,7 @@ public class WorkoutActivity extends ListActivity {
 			showViews();
 	    }
 
-
-	    // use the SimpleCursorAdapter to show the
-	    // elements in a ListView
+		datasource.close();
 	    
 	      
 	}
@@ -134,6 +132,7 @@ public class WorkoutActivity extends ListActivity {
 		        break;
         	}
         case R.id.action_delete:
+        	datasource.open();
         	datasource.deleteWorkout(workoutId);
 	    	finish();
 	    	break;  
@@ -281,6 +280,8 @@ public class WorkoutActivity extends ListActivity {
 			        Toast.LENGTH_LONG).show();
 			}
 		}
+		datasource.close();
+
       }
 
 	  @Override

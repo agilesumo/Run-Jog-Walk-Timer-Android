@@ -3,7 +3,10 @@ package com.agilesumo.runjogwalk;
 
 
 
+import java.util.Collections;
 import java.util.List;
+
+
 
 
 import android.os.Build;
@@ -16,6 +19,7 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,6 +55,7 @@ public class MainActivity extends ListActivity {
 	private Button createWorkoutBtn;
 	ArrayAdapter<Workout> adapter;
 	
+	
 
 	
 		
@@ -70,15 +75,17 @@ public class MainActivity extends ListActivity {
 		datasource = new ExcercisesDataSource(this);
 	    datasource.open();
         
-	    List<Workout> values = datasource.getAllWorkouts();
+	    List<Workout> workoutsNewestFirst = datasource.getAllWorkouts();
+	    Collections.reverse(workoutsNewestFirst);
 	    
-	    adapter = new ArrayAdapter<Workout>(this, R.layout.workout_list_item, R.id.listTextView, values);
+	    adapter = new ArrayAdapter<Workout>(this, R.layout.workout_list_item, R.id.listTextView, workoutsNewestFirst);
 		setListAdapter(adapter);
 		
 		ListView workoutsList = getListView();
+		
 		    
 		
-		if(values.isEmpty()){
+		if(workoutsNewestFirst.isEmpty()){
 			savedWorkoutsHeading.setVisibility(View.INVISIBLE);
 	    }
 		else{
@@ -89,6 +96,7 @@ public class MainActivity extends ListActivity {
 	        @Override
 	        public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
 	        	try {
+	        		datasource.open();
 					Intent intent = new Intent(MainActivity.this, WorkoutActivity.class);
 				    List<Workout> values = datasource.getAllWorkouts();
 
@@ -116,7 +124,7 @@ public class MainActivity extends ListActivity {
 	        }	
 	      });
 	    
-
+	    datasource.close();
 	    
 	      
 	}
@@ -172,41 +180,44 @@ public class MainActivity extends ListActivity {
 	/** Called when the user clicks the add create workout button */
 	
 	  public void createClicked(View view){
+		  // reference for implementation see -> 
+		  // http://stackoverflow.com/questions/11363209/alertdialog-with-positive-button-and-validating-custom-edittext
 		  
-		  AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		  AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
 
-		  alert.setTitle("CREATE NEW WORKOUT");
-		  alert.setMessage("Workout Name");
+		  alertBuilder.setTitle("CREATE NEW WORKOUT");
+		  alertBuilder.setMessage("Workout Name");
 
 		  // Set an EditText view to get user input 
 		  final EditText input = new EditText(this);
-		  alert.setView(input);
+		  InputFilter[] filterArray = new InputFilter[1];
+		  filterArray[0] = new InputFilter.LengthFilter(25);
+		  input.setFilters(filterArray);
+		  alertBuilder.setView(input);
+          datasource = new ExcercisesDataSource(MainActivity.this);
 
-		  alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+
+		  alertBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 		      public void onClick(DialogInterface dialog, int whichButton) {
-	              String workoutName = input.getText().toString();
-	              datasource = new ExcercisesDataSource(MainActivity.this);
-				  datasource.open();
-				  // save the new comment to the database
-				  Workout newWorkout = datasource.createWorkout(workoutName);
-				  datasource.close();
-				  
-				  Intent intent = new Intent(MainActivity.this, WorkoutActivity.class);
-				  long id = newWorkout.getId();
-                  intent.putExtra(EXTRA_WORKOUT_ID, id);
-                  intent.putExtra(EXTRA_WORKOUT_NAME, workoutName);
-                  startActivity(intent);
+	              
+	            	 //All of the fun happens inside the CustomListener now.
+	                  //I had to move it to enable data validation.
+			    	  
+	              
 
 		      }
 		  });
 
-		  alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		  alertBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 		      public void onClick(DialogInterface dialog, int whichButton) {
 		        // Canceled.
 		      }
 		  });
-
-		  alert.show();
+		  AlertDialog alertDialog = alertBuilder.create();
+		  alertDialog.show();
+		  Button newWorkoutButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+		  newWorkoutButton.setOnClickListener(new WorkoutCustomListener(alertDialog, input, datasource, this));
 		  
 	  }
 	
@@ -220,9 +231,10 @@ public class MainActivity extends ListActivity {
 	    super.onResume();
 
 		if(!datasource.getAllWorkouts().isEmpty()) {
-			
+			List<Workout> workoutsNewestFirst = datasource.getAllWorkouts();
+		    Collections.reverse(workoutsNewestFirst);
             adapter.clear();
-		    addAllWorkouts(datasource.getAllWorkouts(),adapter);
+		    addAllWorkouts(workoutsNewestFirst, adapter);
 		    adapter.notifyDataSetChanged();
 			savedWorkoutsHeading.setVisibility(View.VISIBLE);
 
@@ -235,6 +247,8 @@ public class MainActivity extends ListActivity {
 			createClicked(createWorkoutBtn);
 
 		}
+		datasource.close();
+
 		
 		
       }
