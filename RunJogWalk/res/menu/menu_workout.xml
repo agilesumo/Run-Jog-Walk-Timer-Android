@@ -4,8 +4,12 @@
     <item 
         android:id="@+id/action_delete"
         android:title="@string/action_delete" />
+    <item 
+        android:id="@+id/action_clear"
+        android:title="@string/action_clear" />
      <item 
         android:id="@+id/action_settings"
         android:title="@string/action_settings" />
+     
         
 </menu>

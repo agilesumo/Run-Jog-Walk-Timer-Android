@@ -135,8 +135,8 @@ public class AddJogActivity extends Activity {
 			    	long hours = 0;
 					long mins = minutes.getCurrentItem();
 					long secs = seconds.getCurrentItem();
-				    if (mins == 0 && secs == 0) {
-				        Toast.makeText(this, "Cannot add a jog of 0 mins and 0 secs", Toast.LENGTH_SHORT).show();
+				    if (mins == 0 && secs < 10) {
+				        Toast.makeText(this, "Each jog must be at least 10 seconds or more", Toast.LENGTH_LONG).show();
 				        return;
 				    }
 				    if(mins>59) {

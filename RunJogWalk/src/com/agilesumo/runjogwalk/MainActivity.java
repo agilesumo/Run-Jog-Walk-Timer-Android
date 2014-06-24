@@ -75,17 +75,16 @@ public class MainActivity extends ListActivity {
 		datasource = new ExcercisesDataSource(this);
 	    datasource.open();
         
-	    List<Workout> workoutsNewestFirst = datasource.getAllWorkouts();
-	    Collections.reverse(workoutsNewestFirst);
+	    List<Workout> allWorkouts = datasource.getAllWorkouts();
 	    
-	    adapter = new ArrayAdapter<Workout>(this, R.layout.workout_list_item, R.id.listTextView, workoutsNewestFirst);
+	    adapter = new ArrayAdapter<Workout>(this, R.layout.workout_list_item, R.id.listTextView, allWorkouts);
 		setListAdapter(adapter);
 		
 		ListView workoutsList = getListView();
 		
 		    
 		
-		if(workoutsNewestFirst.isEmpty()){
+		if(allWorkouts.isEmpty()){
 			savedWorkoutsHeading.setVisibility(View.INVISIBLE);
 	    }
 		else{
@@ -198,7 +197,7 @@ public class MainActivity extends ListActivity {
 
 
 
-		  alertBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		  alertBuilder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
 		      public void onClick(DialogInterface dialog, int whichButton) {
 	              
 	            	 //All of the fun happens inside the CustomListener now.
@@ -231,10 +230,9 @@ public class MainActivity extends ListActivity {
 	    super.onResume();
 
 		if(!datasource.getAllWorkouts().isEmpty()) {
-			List<Workout> workoutsNewestFirst = datasource.getAllWorkouts();
-		    Collections.reverse(workoutsNewestFirst);
+			List<Workout> allWorkouts = datasource.getAllWorkouts();
             adapter.clear();
-		    addAllWorkouts(workoutsNewestFirst, adapter);
+		    addAllWorkouts(allWorkouts, adapter);
 		    adapter.notifyDataSetChanged();
 			savedWorkoutsHeading.setVisibility(View.VISIBLE);
 

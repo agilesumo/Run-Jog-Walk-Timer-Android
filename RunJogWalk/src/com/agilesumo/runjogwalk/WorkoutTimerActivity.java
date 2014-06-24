@@ -313,19 +313,19 @@ public class WorkoutTimerActivity extends Activity {
 
 			
 			if(currentName.equals("Run")){
-				workoutMainLayout.setBackgroundColor(getResources().getColor(R.color.green));
+				workoutMainLayout.setBackgroundColor(getResources().getColor(R.color.light_green));
 				excerciseLabel.setText("RUN");
 				updateNotification("Run");
 
 			}
 			else if(currentName.equals("Jog")){
-				workoutMainLayout.setBackgroundColor(getResources().getColor(R.color.yellow));
+				workoutMainLayout.setBackgroundColor(getResources().getColor(R.color.orange));
 				excerciseLabel.setText("JOG");
 				updateNotification("Jog");
 
 			}
 			else {
-				workoutMainLayout.setBackgroundColor(getResources().getColor(R.color.red));
+				workoutMainLayout.setBackgroundColor(getResources().getColor(R.color.yellow));
 				excerciseLabel.setText("Walk");
 				updateNotification("Walk");
 

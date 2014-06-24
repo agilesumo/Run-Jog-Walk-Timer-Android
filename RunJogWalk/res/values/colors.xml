@@ -5,6 +5,8 @@
      <color name="yellow">#FFFF00</color>
      <color name="blue">#0000EE</color>
      <color name="light_blue">#52A3CC</color>
+     <color name="orange">#FFC266</color>
+     <color name="light_green">#99D699</color>
      
      
 </resources>

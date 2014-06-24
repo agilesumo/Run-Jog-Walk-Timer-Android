@@ -3,7 +3,12 @@ package com.agilesumo.runjogwalk;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
+
+
+
+
 
 
 
@@ -22,13 +27,16 @@ import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -52,7 +60,7 @@ public class WorkoutActivity extends ListActivity {
 
 		
 	
-	ArrayAdapter<Excercise> adapter;
+	CustomAdapter adapter;
 	
 	private TextView addNewPrompt;
 	
@@ -76,7 +84,8 @@ public class WorkoutActivity extends ListActivity {
 		String workoutName = intent.getStringExtra(MainActivity.EXTRA_WORKOUT_NAME);
 		
 		TextView workoutNameText = (TextView)findViewById(R.id.workout_name);
-		SpannableString spanString = new SpannableString(workoutName);
+		
+		SpannableString spanString = new SpannableString(workoutName.toUpperCase());
 		spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
 		workoutNameText.setText(spanString);
 		
@@ -89,10 +98,11 @@ public class WorkoutActivity extends ListActivity {
 	    
 	    
 
-	    List<Excercise> values = datasource.getExcercisesByWorkoutId(workoutId);
+	    ArrayList<Excercise> values = datasource.getExcercisesByWorkoutId(workoutId);
 	    
 	    //adapter = new ArrayAdapter<Excercise>(this, android.R.layout.simple_list_item_1, values);
-	    adapter = new ArrayAdapter<Excercise>(this, R.layout.excercise_list_item, R.id.listTextViewExcercise, values);
+	    //adapter = new ArrayAdapter<Excercise>(this, R.layout.excercise_list_item, R.id.listTextViewExcercise, values);
+	    adapter = new CustomAdapter(this, values);
 		setListAdapter(adapter);
 		    
 		
@@ -135,7 +145,16 @@ public class WorkoutActivity extends ListActivity {
         	datasource.open();
         	datasource.deleteWorkout(workoutId);
 	    	finish();
-	    	break;  
+	    	break;
+        case R.id.action_clear:
+        	datasource.open();
+        	datasource.deleteAllExcercises();
+        	adapter.clear();
+        	adapter.notifyDataSetChanged();
+     		addNewPrompt.setVisibility(View.VISIBLE);
+     		hideViews();
+
+	    	break;  	
         	
     }
 	return true;
@@ -320,4 +339,38 @@ public class WorkoutActivity extends ListActivity {
 	    totalDurationText.setVisibility(View.VISIBLE);
 		
 	}
+	
+	// reference see: http://hmkcode.com/android-custom-listview-items-row/
+	private class CustomAdapter extends ArrayAdapter<Excercise> {
+		 
+        private final Context context;
+        private final ArrayList<Excercise> excercisesArrayList;
+ 
+        public CustomAdapter(Context context, ArrayList<Excercise> excercisesArrayList) {
+ 
+            super(context, R.layout.excercise_row, excercisesArrayList);
+ 
+            this.context = context;
+            this.excercisesArrayList = excercisesArrayList;
+        }
+ 
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+ 
+            // 1. Create inflater 
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+ 
+            // 2. Get rowView from inflater
+            View rowView = inflater.inflate(R.layout.excercise_row, parent, false);
+ 
+            // 3. Get the two text view from the rowView
+            TextView excerciseView = (TextView) rowView.findViewById(R.id.listTextViewExcercise);
+ 
+            // 4. Set the text for textView 
+            excerciseView.setText("#" + (position+1) +" " + excercisesArrayList.get(position).toString());
+ 
+            // 5. retrn rowView
+            return rowView;
+        }
+}
 }

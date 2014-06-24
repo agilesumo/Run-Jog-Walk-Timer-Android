@@ -105,8 +105,8 @@ public class ExcercisesDataSource {
     return excercises;
   }
   
-  public List<Excercise> getExcercisesByWorkoutId(long workoutId) {
-	    List<Excercise> excercises = new ArrayList<Excercise>();
+  public ArrayList<Excercise> getExcercisesByWorkoutId(long workoutId) {
+	    ArrayList<Excercise> excercises = new ArrayList<Excercise>();
         String[] workoutIdStr = { "" + workoutId };
 	    Cursor cursor = database.query(MySQLiteHelper.TABLE_EXCERCISES,
 	        excerciseTableColumns, DATABASE_SELECT_WORKOUTS, workoutIdStr, null, null, null);
