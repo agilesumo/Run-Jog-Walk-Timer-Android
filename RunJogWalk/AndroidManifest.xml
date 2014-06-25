@@ -72,6 +72,35 @@
 
         </activity>
         
+        <activity
+            android:name="com.agilesumo.runjogwalk.EditRunActivity"
+            android:label="@string/title_activity_edit_run"
+            android:parentActivityName="com.agilesumo.runjogwalk.WorkoutActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.agilesumo.runjogwalk.WorkoutActivity" />
+        </activity>
+            
+            
+        <activity
+            android:name="com.agilesumo.runjogwalk.EditJogActivity"
+            android:label="@string/title_activity_edit_jog"
+            android:parentActivityName="com.agilesumo.runjogwalk.WorkoutActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.agilesumo.runjogwalk.WorkoutActivity" />
+        </activity>
+            
+        <activity
+            android:name="com.agilesumo.runjogwalk.EditWalkActivity"
+            android:label="@string/title_activity_edit_walk"
+            android:parentActivityName="com.agilesumo.runjogwalk.WorkoutActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.agilesumo.runjogwalk.WorkoutActivity" />
+            
+        </activity>
+        
           <activity
             android:name="com.agilesumo.runjogwalk.WorkoutTimerActivity"
             android:label="@string/title_activity_workout_timer"

@@ -72,11 +72,11 @@ public class ExcercisesDataSource {
 				+ " = " + workoutId, null);
   }
 
-  public void deleteExcercise(Excercise excercise) {
-    long id = excercise.getId();
-    System.out.println("Excercise deleted with id: " + id);
+  public void deleteExcercise(long excerciseId) {
+    
+    System.out.println("Excercise deleted with id: " + excerciseId);
     database.delete(MySQLiteHelper.TABLE_EXCERCISES, MySQLiteHelper.COLUMN_EXCERCISE_ID
-        + " = " + id, null);
+        + " = " + excerciseId, null);
   }
   
   public void deleteWorkoutExcercises(long workoutId) {
@@ -86,6 +86,15 @@ public class ExcercisesDataSource {
 
   public void deleteAllExcercises(){
 	  database.delete(MySQLiteHelper.TABLE_EXCERCISES, null, null);
+  }
+  
+  public void updateExcercise(long excerciseId, long hours, long minutes, long seconds){
+	  ContentValues newValues = new ContentValues();
+	  newValues.put(MySQLiteHelper.COLUMN_HOURS, hours);
+	  newValues.put(MySQLiteHelper.COLUMN_MINUTES, minutes);
+	  newValues.put(MySQLiteHelper.COLUMN_SECONDS, seconds);
+	  database.update(MySQLiteHelper.TABLE_EXCERCISES, newValues, MySQLiteHelper.COLUMN_EXCERCISE_ID
+				+ " = " + excerciseId, null);
   }
   
   public List<Excercise> getAllExcercises() {
@@ -164,7 +173,7 @@ public class ExcercisesDataSource {
   private Excercise cursorToExcercise(Cursor cursor) {
     Excercise excercise = new Excercise();
     excercise.setId(cursor.getLong(0));
-    excercise.setExcercise(cursor.getString(1));
+    excercise.setExcerciseName(cursor.getString(1));
     excercise.setHours(cursor.getLong(2));
     excercise.setMinutes(cursor.getLong(3));
     excercise.setSeconds(cursor.getLong(4));

@@ -165,7 +165,7 @@ public class WorkoutTimerActivity extends Activity {
 		
 		for (Excercise excercise : excercises){
 			excercisesDurations.add(excercise.getTimeDuration());
-			excerciseNames.add(excercise.getExcercise());
+			excerciseNames.add(excercise.getExcerciseName());
 			
 		}
 

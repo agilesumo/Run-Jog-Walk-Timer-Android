@@ -31,11 +31,11 @@ public class Excercise {
   public void setHours(long hours) {
 	  this.hours = hours;
   }
-  public String getExcercise() {
+  public String getExcerciseName() {
       return excercise;
   }
 
-  public void setExcercise(String excercise) {
+  public void setExcerciseName(String excercise) {
       this.excercise = excercise;
   }
 

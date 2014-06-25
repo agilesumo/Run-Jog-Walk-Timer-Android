@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="fill_parent"
+	android:layout_width="fill_parent"
+	android:layout_marginTop="12dp"
+	android:orientation="vertical"
+	android:gravity="center_vertical"
+	>
+
+    <LinearLayout 
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:layout_gravity="center_horizontal"
+		android:paddingLeft="12dp"
+		android:paddingRight="12dp"
+		android:paddingTop="10dp">
+		
+        <TextView 
+            android:text="@string/mins_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:paddingRight="96dp"
+            android:textSize="18sp"/>
+        <TextView 
+            android:text="@string/secs_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp" />
+        
+            
+		
+    </LinearLayout>    
+	
+	<LinearLayout 
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:layout_gravity="center_horizontal"
+		android:paddingLeft="12dp"
+		android:paddingRight="12dp"
+		android:paddingTop="7dp" >
+		
+	  
+	  	<kankan.wheel.widget.WheelView android:id="@+id/mins"
+			android:layout_height="wrap_content"
+			android:layout_width="140dp"/>
+		<kankan.wheel.widget.WheelView android:id="@+id/secs"
+			android:layout_height="wrap_content"
+			android:layout_width="140dp"/>
+	</LinearLayout>
+	
+	<LinearLayout 
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:layout_gravity="center_horizontal"
+		android:paddingTop="10dp"
+		android:orientation="horizontal"
+		
+		>
+	
+		<Button
+	        android:id="@+id/btnSaveJog"
+		    android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:text="@string/save_jog_btn"
+	        android:layout_marginRight="10dp"
+	        android:layout_weight="32"
+	        android:onClick="onClick" />
+		
+	    <Button
+	        android:id="@+id/btnDeleteRun"
+		    android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:text="@string/delete_btn"
+	        android:layout_marginLeft="10dp"	        
+	        android:layout_marginRight="10dp"
+	        android:layout_weight="32"
+	        android:onClick="onClick" />
+				
+		<Button
+	        android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:text="@string/cancel_btn"
+	        android:layout_marginLeft="10dp"
+	        android:layout_weight="32"	        
+	        android:onClick="onClick" />
+	
+	
+	</LinearLayout>
+	
+	
+		
+</LinearLayout>

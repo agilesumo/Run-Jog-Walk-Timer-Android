@@ -20,6 +20,8 @@ import java.util.List;
 
 
 
+import java.util.Locale;
+
 import android.graphics.Typeface;
 import android.inputmethodservice.ExtractEditText;
 import android.os.Build;
@@ -38,9 +40,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,7 +55,17 @@ public class WorkoutActivity extends ListActivity {
 
 	//=======Constants========
 
+	public final static String EXTRA_EXCERCISE_ID = "com.agilesumo.runjogwalk.excerciseID";
+	
+	public final static String EXTRA_EXCERCISE_NAME = "com.agilesumo.runjogwalk.excerciseName";
+	
 	public final static String EXTRA_WORKOUT_ID = "com.agilesumo.runjogwalk.ID";
+	
+	public final static String EXTRA_EXCERCISE_MINS = "com.agilesumo.runjogwalk.excerciseMins";
+	
+	public final static String EXTRA_EXCERCISE_SECS = "com.agilesumo.runjogwalk.excerciseSecs";
+
+
 
 	// =======================
 	
@@ -85,7 +99,7 @@ public class WorkoutActivity extends ListActivity {
 		
 		TextView workoutNameText = (TextView)findViewById(R.id.workout_name);
 		
-		SpannableString spanString = new SpannableString(workoutName.toUpperCase());
+		SpannableString spanString = new SpannableString(workoutName.toUpperCase(Locale.ENGLISH));
 		spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
 		workoutNameText.setText(spanString);
 		
@@ -113,6 +127,47 @@ public class WorkoutActivity extends ListActivity {
 			addNewPrompt.setVisibility(View.GONE);
 			showViews();
 	    }
+		
+		ListView excercisesList = getListView();
+		
+	    excercisesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+	        @Override
+	        public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+	        	
+        		datasource.open();
+				Intent intent = null;
+			    List<Excercise> values = datasource.getAllExcercises();
+
+				Excercise excercise = values.get(position);
+				String excerciseName = excercise.getExcerciseName();
+				long excerciseId = excercise.getId();
+				
+				if(excerciseName.equals("Run")){
+					intent = new Intent(WorkoutActivity.this, EditRunActivity.class);
+				}
+				else if(excerciseName.equals("Jog")){
+					intent = new Intent(WorkoutActivity.this, EditJogActivity.class);
+				}
+				else {
+					intent = new Intent(WorkoutActivity.this, EditWalkActivity.class);
+				}
+				
+				
+                long totalMinutes = (excercise.getHours()*60) + excercise.getMinutes();
+                long seconds = excercise.getSeconds();
+                intent.putExtra(EXTRA_EXCERCISE_ID, excerciseId);
+                intent.putExtra(EXTRA_EXCERCISE_NAME, excerciseName);
+                intent.putExtra(EXTRA_EXCERCISE_MINS, totalMinutes);
+                intent.putExtra(EXTRA_EXCERCISE_SECS, seconds);
+				
+				
+	            startActivity(intent);
+		            					
+				
+	          
+	        }	
+	      });
+	    
 
 		datasource.close();
 	    
@@ -283,21 +338,9 @@ public class WorkoutActivity extends ListActivity {
 		}
 		
 		else {
-			try {
-				
+			addNewPrompt.setVisibility(View.VISIBLE);
+			hideViews();
 			
-				addNewPrompt.setVisibility(View.VISIBLE);
-				hideViews();
-			}
-			catch (Exception e) {
-			    // handle any errors
-			    Log.e("ErrorWrokoutActivity", "Error in resume", e);  // log the error
-			    // Also let the user know something went wrong
-			    Toast.makeText(
-			        getApplicationContext(),
-			        e.getClass().getName() + " " + e.getMessage(),
-			        Toast.LENGTH_LONG).show();
-			}
 		}
 		datasource.close();
 
