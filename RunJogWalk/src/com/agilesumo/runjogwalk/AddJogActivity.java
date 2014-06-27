@@ -1,9 +1,6 @@
 package com.agilesumo.runjogwalk;
 
-import java.util.Calendar;
-
 import com.agilesumo.runjogwalk.R;
-
 import kankan.wheel.widget.OnWheelChangedListener;
 import kankan.wheel.widget.OnWheelClickedListener;
 import kankan.wheel.widget.OnWheelScrollListener;
@@ -11,20 +8,18 @@ import kankan.wheel.widget.WheelView;
 import kankan.wheel.widget.adapters.NumericWheelAdapter;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
-
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class AddJogActivity extends Activity {
 	
+	
+	// =====Instance variables=====
 	
 	// Time changed flag
 	private boolean timeChanged = false;
@@ -37,6 +32,9 @@ public class AddJogActivity extends Activity {
 	private WheelView seconds;
 	
 	private ExcercisesDataSource datasource;
+	
+	// ===========================
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -87,8 +85,7 @@ public class AddJogActivity extends Activity {
 		
 		minutes.addScrollingListener(scrollListener);
 		seconds.addScrollingListener(scrollListener);
-		
-		
+				
 	}
 
 	/**
@@ -106,22 +103,30 @@ public class AddJogActivity extends Activity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.add_run, menu);
+		getMenuInflater().inflate(R.menu.menu_settings_only, menu);
 		return true;
 	}
-
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
+	   		
+	    switch (item.getItemId()) {
+
+	        case R.id.action_settings:
+	        	if (Build.VERSION.SDK_INT < 11) {
+			        Intent intent = new Intent(this, SettingsActivity.class);
+			        startActivity(intent);
+			        break;
+	        	}
+	        	else{
+	        		
+	        			Intent intent = new Intent(this, SettingsAPI11PlusActivity.class);
+				        startActivity(intent);
+				        break;
+	            }
+	    }
+		return true;
 	}
 	
 	
@@ -130,42 +135,30 @@ public class AddJogActivity extends Activity {
 	public void onClick(View view) {
 		switch (view.getId()) {
 		    case R.id.btnAddJog:
-				try {
+		    	long hours = 0;
+				long mins = minutes.getCurrentItem();
+				long secs = seconds.getCurrentItem();
+			    if (mins == 0 && secs < 10) {
+			        Toast.makeText(this, "Each jog must be at least 10 seconds or more", Toast.LENGTH_LONG).show();
+			        return;
+			    }
+			    if(mins>59) {
+			    	hours++;
+			    	mins -= 60;
+			    }
+			    Intent intent = getIntent();
+				long workoutId = intent.getLongExtra(WorkoutActivity.EXTRA_WORKOUT_ID, 0);
+			    datasource = new ExcercisesDataSource(this);
+			    datasource.open();
+			    // save the new comment to the database
+			    datasource.createExcercise("Jog", hours, mins, secs, workoutId);
+			    datasource.close();
+				finish();
+				break;
 		
-			    	long hours = 0;
-					long mins = minutes.getCurrentItem();
-					long secs = seconds.getCurrentItem();
-				    if (mins == 0 && secs < 10) {
-				        Toast.makeText(this, "Each jog must be at least 10 seconds or more", Toast.LENGTH_LONG).show();
-				        return;
-				    }
-				    if(mins>59) {
-				    	hours++;
-				    	mins -= 60;
-				    }
-				    Intent intent = getIntent();
-					long workoutId = intent.getLongExtra(WorkoutActivity.EXTRA_WORKOUT_ID, 0);
-				    datasource = new ExcercisesDataSource(this);
-				    datasource.open();
-				    // save the new comment to the database
-				    datasource.createExcercise("Jog", hours, mins, secs, workoutId);
-				    datasource.close();
-					finish();
-		
-					
-				}
-				catch (Exception e) {
-				    // handle any errors
-				    Log.e("ErrorMainActivity", "Error in activity", e);  // log the error
-				    // Also let the user know something went wrong
-				    Toast.makeText(
-				        getApplicationContext(),
-				        e.getClass().getName() + " " + e.getMessage(),
-				        Toast.LENGTH_LONG).show();
-				}
-				
 		    case R.id.btnCancel:
 		    	finish();
+		    	break;
 		}
 	}
 	
@@ -178,9 +171,6 @@ public class AddJogActivity extends Activity {
 	  protected void onPause() {
 	    super.onPause();
 	  }
-	  
-	  	
-
 	
 }
 

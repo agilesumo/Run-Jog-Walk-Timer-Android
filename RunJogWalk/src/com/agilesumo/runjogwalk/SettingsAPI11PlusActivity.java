@@ -2,16 +2,13 @@ package com.agilesumo.runjogwalk;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class SettingsAPI11PlusActivity extends Activity {
-	
-
-	
+		
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

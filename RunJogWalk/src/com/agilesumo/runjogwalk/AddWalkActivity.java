@@ -2,7 +2,6 @@ package com.agilesumo.runjogwalk;
 
 
 import com.agilesumo.runjogwalk.R;
-
 import kankan.wheel.widget.OnWheelChangedListener;
 import kankan.wheel.widget.OnWheelClickedListener;
 import kankan.wheel.widget.OnWheelScrollListener;
@@ -10,20 +9,18 @@ import kankan.wheel.widget.WheelView;
 import kankan.wheel.widget.adapters.NumericWheelAdapter;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
-
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class AddWalkActivity extends Activity {
 	
+	
+	// =====Instance variables=====
 	
 	// Time changed flag
 	private boolean timeChanged = false;
@@ -37,6 +34,9 @@ public class AddWalkActivity extends Activity {
 	
 	private ExcercisesDataSource datasource;
 	
+	// ===========================
+
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,13 +46,11 @@ public class AddWalkActivity extends Activity {
 		minutes = (WheelView) findViewById(R.id.mins);
 		minutes.setViewAdapter(new NumericWheelAdapter(this, 0, 90));
 		minutes.setCyclic(true);
-
 	
 		seconds = (WheelView) findViewById(R.id.secs);
 		seconds.setViewAdapter(new NumericWheelAdapter(this, 0, 59, "%02d"));
 		seconds.setCyclic(true);
-		
-	
+			
 		// add listeners
 		addChangingListener(seconds, "seconds");
 		addChangingListener(minutes, "minutes");
@@ -62,6 +60,7 @@ public class AddWalkActivity extends Activity {
 				
 			}
 		};
+		
 		minutes.addChangingListener(wheelListener);
 		seconds.addChangingListener(wheelListener);
 		
@@ -70,6 +69,7 @@ public class AddWalkActivity extends Activity {
                 wheel.setCurrentItem(itemIndex, true);
             }
         };
+        
         minutes.addClickingListener(click);
         seconds.addClickingListener(click);
 
@@ -86,8 +86,7 @@ public class AddWalkActivity extends Activity {
 		
 		minutes.addScrollingListener(scrollListener);
 		seconds.addScrollingListener(scrollListener);
-		
-		
+			
 	}
 
 	/**
@@ -105,22 +104,30 @@ public class AddWalkActivity extends Activity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.add_run, menu);
+		getMenuInflater().inflate(R.menu.menu_settings_only, menu);
 		return true;
 	}
-
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
+	   		
+	    switch (item.getItemId()) {
+
+	        case R.id.action_settings:
+	        	if (Build.VERSION.SDK_INT < 11) {
+			        Intent intent = new Intent(this, SettingsActivity.class);
+			        startActivity(intent);
+			        break;
+	        	}
+	        	else{
+	        		
+	        			Intent intent = new Intent(this, SettingsAPI11PlusActivity.class);
+				        startActivity(intent);
+				        break;
+	            }
+	    }
+		return true;
 	}
 	
 	
@@ -129,57 +136,44 @@ public class AddWalkActivity extends Activity {
 	public void onClick(View view) {
 		switch (view.getId()) {
 		    case R.id.btnAddWalk:
-				try {
-		
-			    	long hours = 0;	
-					long mins = minutes.getCurrentItem();
-					long secs = seconds.getCurrentItem();
-				    if (mins == 0 && secs < 10) {
-				        Toast.makeText(this, "Each walk must be at least 10 seconds or more", Toast.LENGTH_LONG).show();
-				        return;
-				    }
-				    if(mins>59) {
-				    	hours++;
-				    	mins -= 60;
-				    }
-				    Intent intent = getIntent();
-					long workoutId = intent.getLongExtra(WorkoutActivity.EXTRA_WORKOUT_ID, 0);
-				    datasource = new ExcercisesDataSource(this);
-				    datasource.open();
-				    // save the new comment to the database
-				    datasource.createExcercise("Walk", hours, mins, secs, workoutId);
-				    datasource.close();
-					finish();
-		
-					
-				}
-				catch (Exception e) {
-				    // handle any errors
-				    Log.e("ErrorMainActivity", "Error in activity", e);  // log the error
-				    // Also let the user know something went wrong
-				    Toast.makeText(
-				        getApplicationContext(),
-				        e.getClass().getName() + " " + e.getMessage(),
-				        Toast.LENGTH_LONG).show();
-				}
+						
+		    	long hours = 0;	
+				long mins = minutes.getCurrentItem();
+				long secs = seconds.getCurrentItem();
+			    if (mins == 0 && secs < 10) {
+			        Toast.makeText(this, "Each walk must be at least 10 seconds or more", Toast.LENGTH_LONG).show();
+			        return;
+			    }
+			    if(mins>59) {
+			    	hours++;
+			    	mins -= 60;
+			    }
+			    Intent intent = getIntent();
+				long workoutId = intent.getLongExtra(WorkoutActivity.EXTRA_WORKOUT_ID, 0);
+			    datasource = new ExcercisesDataSource(this);
+			    datasource.open();
+			    // save the new comment to the database
+			    datasource.createExcercise("Walk", hours, mins, secs, workoutId);
+			    datasource.close();
+				finish();
+				break;
+							
 				
 		    case R.id.btnCancel:
 		    	finish();
+		    	break;
 		}
 	}
 	
-	  @Override
-	  protected void onResume() {
+	@Override
+	protected void onResume() {
 	    super.onResume();
-	  }
-
-	  @Override
-	  protected void onPause() {
-	    super.onPause();
-	  }
-	  
-	  	
-
+	}
 	
+	@Override
+	protected void onPause() {
+	    super.onPause();
+	}
+	  	
 }
 

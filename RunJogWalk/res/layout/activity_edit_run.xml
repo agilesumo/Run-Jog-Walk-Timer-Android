@@ -64,7 +64,7 @@
 	        android:layout_height="wrap_content"
 	        android:text="@string/save_run_btn"
 	        android:layout_marginRight="10dp"
-	        android:layout_weight="32"
+	        android:layout_weight="38"
 	        android:onClick="onClick" />
 		
 	    <Button
@@ -74,7 +74,7 @@
 	        android:text="@string/delete_btn"
 	        android:layout_marginLeft="10dp"	        
 	        android:layout_marginRight="10dp"
-	        android:layout_weight="32"
+	        android:layout_weight="30"
 	        android:onClick="onClick" />
 				
 		<Button
@@ -83,7 +83,7 @@
 	        android:layout_height="wrap_content"
 	        android:text="@string/cancel_btn"
 	        android:layout_marginLeft="10dp"
-	        android:layout_weight="32"	        
+	        android:layout_weight="30"	        
 	        android:onClick="onClick" />
 	
 	

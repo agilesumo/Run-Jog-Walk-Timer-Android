@@ -1,9 +1,6 @@
 package com.agilesumo.runjogwalk;
 
-import java.util.Calendar;
-
 import com.agilesumo.runjogwalk.R;
-
 import kankan.wheel.widget.OnWheelChangedListener;
 import kankan.wheel.widget.OnWheelClickedListener;
 import kankan.wheel.widget.OnWheelScrollListener;
@@ -11,29 +8,29 @@ import kankan.wheel.widget.WheelView;
 import kankan.wheel.widget.adapters.NumericWheelAdapter;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
-
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class EditRunActivity extends Activity {
 	
 	//=======Constants========
 
-		public final static String EXTRA_CALLER = "com.agilesumo.runjogwalk.RUNJOGWALK";
-		public final static String EXTRA_HOURS = "com.agilesumo.runjogwalk.HOURS";
-		public final static String EXTRA_MINUTES = "com.agilesumo.runjogwalk.MINUTES";
-		public final static String EXTRA_SECONDS = "com.agilesumo.runjogwalk.SECONDS";
-		
-
+	public final static String EXTRA_CALLER = "com.agilesumo.runjogwalk.RUNJOGWALK";
+	public final static String EXTRA_HOURS = "com.agilesumo.runjogwalk.HOURS";
+	public final static String EXTRA_MINUTES = "com.agilesumo.runjogwalk.MINUTES";
+	public final static String EXTRA_SECONDS = "com.agilesumo.runjogwalk.SECONDS";
 	
+	
+	// ===========================
+	
+	
+
+	// =====Instance variables=====
+			
 	// Time changed flag
 	private boolean timeChanged = false;
 	
@@ -48,6 +45,10 @@ public class EditRunActivity extends Activity {
 	
 	private long excerciseId;
 	
+	
+	// ===========================
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -57,17 +58,14 @@ public class EditRunActivity extends Activity {
 		excerciseId = intent.getLongExtra(WorkoutActivity.EXTRA_EXCERCISE_ID, 0);
 		int excerciseMins = (int)intent.getLongExtra(WorkoutActivity.EXTRA_EXCERCISE_MINS, 1);
 		int excerciseSecs = (int)intent.getLongExtra(WorkoutActivity.EXTRA_EXCERCISE_SECS, 1);
-
 		
 		minutes = (WheelView) findViewById(R.id.mins);
 		minutes.setViewAdapter(new NumericWheelAdapter(this, 0, 90));
 		minutes.setCyclic(true);
-
 	
 		seconds = (WheelView) findViewById(R.id.secs);
 		seconds.setViewAdapter(new NumericWheelAdapter(this, 0, 59, "%02d"));
-		seconds.setCyclic(true);
-		
+		seconds.setCyclic(true);		
 	
 		// add listeners
 		addChangingListener(seconds, "seconds");
@@ -78,6 +76,7 @@ public class EditRunActivity extends Activity {
 				
 			}
 		};
+		
 		minutes.addChangingListener(wheelListener);
 		seconds.addChangingListener(wheelListener);
 		
@@ -86,6 +85,7 @@ public class EditRunActivity extends Activity {
                 wheel.setCurrentItem(itemIndex, true);
             }
         };
+        
         minutes.addClickingListener(click);
         seconds.addClickingListener(click);
 
@@ -105,8 +105,7 @@ public class EditRunActivity extends Activity {
 				
 		minutes.setCurrentItem(excerciseMins);
 		seconds.setCurrentItem(excerciseSecs);
-		
-		
+			
 	}
 
 	/**
@@ -124,22 +123,30 @@ public class EditRunActivity extends Activity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.add_run, menu);
+		getMenuInflater().inflate(R.menu.menu_settings_only, menu);
 		return true;
 	}
-
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
+	   		
+	    switch (item.getItemId()) {
+
+	        case R.id.action_settings:
+	        	if (Build.VERSION.SDK_INT < 11) {
+			        Intent intent = new Intent(this, SettingsActivity.class);
+			        startActivity(intent);
+			        break;
+	        	}
+	        	else{
+	        		
+	        			Intent intent = new Intent(this, SettingsAPI11PlusActivity.class);
+				        startActivity(intent);
+				        break;
+	            }
+	    }
+		return true;
 	}
 	
 	
@@ -185,18 +192,15 @@ public class EditRunActivity extends Activity {
 		}
 	}
 	
-	  @Override
-	  protected void onResume() {
-	    super.onResume();
-	  }
+	@Override
+	protected void onResume() {
+		super.onResume();
+	}
 
-	  @Override
-	  protected void onPause() {
-	    super.onPause();
-	  }
-	  
-	  	
-
-	
+	@Override
+	protected void onPause() {
+		super.onPause();
+	}
+  	
 }
 

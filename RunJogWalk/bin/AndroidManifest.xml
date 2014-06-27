@@ -11,7 +11,6 @@
     
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="android.permission.VIBRATE"/>
     
     
@@ -26,90 +25,50 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
         <activity
             android:name="com.agilesumo.runjogwalk.AddRunActivity"
-            android:label="@string/title_activity_add_run"
-            android:parentActivityName="com.agilesumo.runjogwalk.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.agilesumo.runjogwalk.MainActivity" />
-
+            android:label="@string/title_activity_add_run" >
         </activity>
         
         <activity
             android:name="com.agilesumo.runjogwalk.WorkoutActivity"
-            android:label="@string/title_activity_workout"
-            android:parentActivityName="com.agilesumo.runjogwalk.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.agilesumo.runjogwalk.MainActivity" />
-
+            android:label="@string/title_activity_workout" >
         </activity>
         
         
         <activity
             android:name="com.agilesumo.runjogwalk.AddJogActivity"
-            android:label="@string/title_activity_add_jog"
-            android:parentActivityName="com.agilesumo.runjogwalk.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.agilesumo.runjogwalk.MainActivity" />
-
+            android:label="@string/title_activity_add_jog" >
         </activity>
         
          <activity
             android:name="com.agilesumo.runjogwalk.AddWalkActivity"
-            android:label="@string/title_activity_add_walk"
-            android:parentActivityName="com.agilesumo.runjogwalk.MainActivity" 
-            >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.agilesumo.runjogwalk.MainActivity" />
-
-        </activity>
+            android:label="@string/title_activity_add_walk" >
+         </activity>
         
         <activity
             android:name="com.agilesumo.runjogwalk.EditRunActivity"
-            android:label="@string/title_activity_edit_run"
-            android:parentActivityName="com.agilesumo.runjogwalk.WorkoutActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.agilesumo.runjogwalk.WorkoutActivity" />
+            android:label="@string/title_activity_edit_run" >
         </activity>
             
             
         <activity
             android:name="com.agilesumo.runjogwalk.EditJogActivity"
-            android:label="@string/title_activity_edit_jog"
-            android:parentActivityName="com.agilesumo.runjogwalk.WorkoutActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.agilesumo.runjogwalk.WorkoutActivity" />
+            android:label="@string/title_activity_edit_jog" >
         </activity>
             
         <activity
             android:name="com.agilesumo.runjogwalk.EditWalkActivity"
-            android:label="@string/title_activity_edit_walk"
-            android:parentActivityName="com.agilesumo.runjogwalk.WorkoutActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.agilesumo.runjogwalk.WorkoutActivity" />
-            
+            android:label="@string/title_activity_edit_walk" >          
         </activity>
         
           <activity
             android:name="com.agilesumo.runjogwalk.WorkoutTimerActivity"
-            android:label="@string/title_activity_workout_timer"
-            android:parentActivityName="com.agilesumo.runjogwalk.WorkoutActivity" 
-            android:launchMode="singleTop" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.agilesumo.runjogwalk.WorkoutActivity" />
-
+            android:label="@string/title_activity_workout_timer" >
         </activity>
         
                  

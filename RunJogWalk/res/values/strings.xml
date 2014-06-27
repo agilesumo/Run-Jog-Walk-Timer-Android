@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Flexi Run/Jog/Walk Timer</string>
+    <string name="app_name">Agile Run/Jog/Walk Timer</string>
     <string name="add_run_btn">Add Run</string>
     <string name="add_jog_btn">Add Jog</string>
     <string name="add_walk_btn">Add Walk</string>
