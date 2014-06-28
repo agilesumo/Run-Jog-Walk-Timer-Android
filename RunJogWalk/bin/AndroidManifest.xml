@@ -3,7 +3,7 @@
     package="com.agilesumo.runjogwalk"
     android:installLocation="auto"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0.1" >
 
     <uses-sdk
         android:minSdkVersion="10"
@@ -68,7 +68,8 @@
         
           <activity
             android:name="com.agilesumo.runjogwalk.WorkoutTimerActivity"
-            android:label="@string/title_activity_workout_timer" >
+            android:label="@string/title_activity_workout_timer"
+            android:launchMode="singleTop" >
         </activity>
         
                  

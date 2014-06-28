@@ -166,7 +166,7 @@ public class WorkoutActivity extends ListActivity {
 		    	break;
 	        case R.id.action_clear:
 	        	datasource.open();
-	        	datasource.deleteAllExcercises();
+	        	datasource.deleteWorkoutExcercises(workoutId);
 	        	adapter.clear();
 	        	adapter.notifyDataSetChanged();
 	     		addNewPrompt.setVisibility(View.VISIBLE);

@@ -17,6 +17,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.AudioManager;
+import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
@@ -96,8 +97,11 @@ public class WorkoutTimerActivity extends Activity {
 	private String vibrateDurationPref;
 	
 	private SharedPreferences sharedPref;
+		
+	private AudioManager audioManager;
 	
-	private PhoneStateListener phoneStateListener;
+	private OnAudioFocusChangeListener afChangeListener;
+	
 	
 	
 	// =======================
@@ -118,11 +122,6 @@ public class WorkoutTimerActivity extends Activity {
 		setContentView(R.layout.activity_workout_timer);
 		
 		lockOrientation();
-				
-		TelephonyManager mgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-		if(mgr != null) {
-		    mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
-		}
 				
 		Intent intent = getIntent();
 		workoutId = intent.getLongExtra(WorkoutActivity.EXTRA_WORKOUT_ID, 0);
@@ -381,13 +380,37 @@ public class WorkoutTimerActivity extends Activity {
 	                          theMp.reset();
 	                          theMp.release();
 	                          theMp = null;
+	                          audioManager.abandonAudioFocus(afChangeListener);
+
 	                      }
 	                  });
 
 	                  mp.start();
 	              }
 	          });
-
+	          
+	          audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+	          
+	          audioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC,
+		          AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+	          
+	          OnAudioFocusChangeListener afChangeListener = new OnAudioFocusChangeListener() {
+	              public void onAudioFocusChange(int focusChange) {
+	        	      if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+	        	          // Lower the volume
+	        	    	  
+	        	      } 
+	        	      else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+	        	          // Resume playback
+	        	          	        	    	  
+	        	      }
+	        	      else if (focusChange == AudioManager.AUDIOFOCUS_LOSS){
+	        	          //WorkoutTimerActivity.this.audioManager.abandonAudioFocus(WorkoutTimerActivity.this.afChangeListener);
+	        	          // Stop playback
+	        	      }
+	        	  }
+	          };
+	          
 			  mPlayer.start();
 	     
 	      }
@@ -395,7 +418,6 @@ public class WorkoutTimerActivity extends Activity {
 	  }
 	  
 	  private void showNotification(String excerciseStr) {
-		    // In this sample, we'll use the same text for the ticker and the expanded notification
 		    CharSequence notificationTitle = getText(R.string.notification_title);
 		    CharSequence notificationText;
 		    		    
