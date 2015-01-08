@@ -237,6 +237,8 @@ public class WorkoutActivity extends ListActivity {
 		
 		else {
 			addNewPrompt.setVisibility(View.VISIBLE);
+		    adapter.clear();
+		    adapter.notifyDataSetChanged();
 			hideViews();	
 		}
 		datasource.close();
